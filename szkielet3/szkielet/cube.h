@@ -1,9 +1,9 @@
 #ifndef CUBE_H
 #define CUBE_H
 
-//cubeVertices - tablica ze wsp蟪rz阣nymi wierzcho砶體.
-//cubeColors - tablica z kolorami wierzcho砶體
-//cubeVertexCount - liczba wierzcho砶體
+//cubeVertices - tablica ze wsp贸艂rz臋dnymi wierzcho艂k贸w.
+//cubeColors - tablica z kolorami wierzcho艂k贸w
+//cubeVertexCount - liczba wierzcho艂k贸w
 
 int cubeVertexCount=20;
 
@@ -55,8 +55,7 @@ float cubetexVertices[]={
 	1,0,		1,0,		1,1,		1,1,
 	1,0,		1,0,		1,1,		1,1,
 
-	/*0,0,		0,0,		1,0,		1,0, 
-	0,0,		0,0,		1,0,		1,0, */
+
 }; 
 
 float cubeColors[]={
