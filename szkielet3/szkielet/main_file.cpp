@@ -21,11 +21,16 @@ void displayFrame(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	glm::mat4 M;
+	//M=I;
+	M=glm::mat4(1.0f); //m zawiera macierz jednostkow¹
+	M=glm::rotate(M,-90.0f,glm::vec3(0.0f,1.0f,0.0f));
+	M=glm::scale(M,glm::vec3(3.0f,3.0f,4.0f));
+
 	glm::mat4 V=glm::lookAt(
-		glm::vec3(0.0f,0.0f,-1.0f),
-		glm::vec3(-0.15f,-0.15f,-0.15f),
+		glm::vec3(0.0f, 0.0f,-4.0f),
+		glm::vec3(0.0f,-0.3f,0.0f),
 		glm::vec3(0.0f,1.0f,0.0f));
-	
+
 	glm::mat4 P=glm::perspective(75.0f, 1.0f, 1.0f, 50.0f);
 	
 	glMatrixMode(GL_PROJECTION);
@@ -33,8 +38,9 @@ void displayFrame(void) {
 	glMatrixMode(GL_MODELVIEW);
 	
 		
-	M=glm::mat4(1.0f);
+	/*M=glm::mat4(1.0f);
 	M=glm::rotate(M,-90.0f,glm::vec3(0.0f,1.0f,0.0f));
+	glm::mat4 W=glm::scale(M, glm::vec3(5.0f,1.0f,2.0f)); */
 	glLoadMatrixf(glm::value_ptr(V*M));
 
 	glEnableClientState(GL_VERTEX_ARRAY);	
@@ -71,7 +77,7 @@ int main(int argc, char* argv[]) {
 	//Tutaj kod inicjujacy	
 	glewInit();
 
-	if (suf.Load("bricks.tga")==IMG_OK) {
+	if (suf.Load("sciana6.tga")==IMG_OK) {
 	glGenTextures(1,&sufit); //Zainicjuj uchwyt tex
 	glBindTexture(GL_TEXTURE_2D,sufit); //Przetwarzaj uchwyt tex
 	if (suf.GetBPP()==24) //Obrazek 24bit
