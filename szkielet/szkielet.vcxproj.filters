@@ -18,18 +18,12 @@
     <ClCompile Include="main_file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="detailed_cube.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="tga.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="detailed_cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="tga.h">
