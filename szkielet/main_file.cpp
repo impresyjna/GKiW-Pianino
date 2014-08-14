@@ -7,6 +7,7 @@
 #include "glm\gtc\type_ptr.hpp"
 #include "tga.h"
 #include "tlo.h"
+#include "klawisze.h"
 #include <fstream>
 #include <string>
 

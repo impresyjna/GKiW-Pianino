@@ -102,8 +102,9 @@
     <ClCompile Include="tga.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cube.h" />
+    <ClInclude Include="klawisze.h" />
     <ClInclude Include="tga.h" />
+    <ClInclude Include="tlo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

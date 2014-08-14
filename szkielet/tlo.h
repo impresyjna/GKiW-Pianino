@@ -1,5 +1,5 @@
-#ifndef CUBE_H
-#define CUBE_H
+#ifndef TLO_H
+#define TLO_H
 
 //cubeVertices - tablica ze współrzędnymi wierzchołków.
 //cubeColors - tablica z kolorami wierzchołków

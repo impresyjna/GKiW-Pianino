@@ -23,10 +23,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cube.h">
+    <ClInclude Include="tga.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tga.h">
+    <ClInclude Include="tlo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="klawisze.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
