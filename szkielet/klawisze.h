@@ -1,5 +1,5 @@
-#ifndef klawisze_h
-#define klawisze_h
+#ifndef KLAWISZE_H
+#define KLAWISZE_H
 
 int bialy_prostyVerCount=24;
 int czarnyVerCount=24; 

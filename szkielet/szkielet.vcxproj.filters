@@ -32,5 +32,8 @@
     <ClInclude Include="klawisze.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pianino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

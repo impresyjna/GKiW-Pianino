@@ -8,7 +8,7 @@
 #include "tga.h"
 #include "tlo.h"
 #include "klawisze.h"
-#include <fstream>
+#include "pianino.h"
 #include <string>
 
 using namespace std; 
@@ -19,6 +19,7 @@ GLuint sufit;
 TGAImg img;  
 
 void rysuj_z_tex(GLuint *uchwyt, float *ver, float *vertexture, int vercount) {
+	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,*uchwyt);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -27,7 +28,20 @@ void rysuj_z_tex(GLuint *uchwyt, float *ver, float *vertexture, int vercount) {
 	glDrawArrays( GL_QUADS, 0, vercount);
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-};
+}
+
+void rysuj_z_kolor(float *ver, float *vercolor, int vercount) {
+	glDisable(GL_TEXTURE_2D);
+	glEnableClientState(GL_VERTEX_ARRAY);	
+	glEnableClientState(GL_COLOR_ARRAY);
+	glVertexPointer(3,GL_FLOAT,0,ver);
+	glColorPointer(3,GL_FLOAT,0,vercolor);
+	glDrawArrays(GL_QUADS,0,vercount);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);	
+	
+}
+
 void macierz_tla() {
 	glm::mat4 M;
 
@@ -48,6 +62,25 @@ void macierz_tla() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(glm::value_ptr(V*M));
 };
+void macierz_pianina() {
+	glm::mat4 M;
+	glm::mat4 V=glm::lookAt(
+		glm::vec3(0.0f,0.0f,-5.0f),
+		glm::vec3(0.0f,0.0f,0.0f),
+		glm::vec3(0.0f,1.0f,0.0f));
+	
+	glm::mat4 P=glm::perspective(80.0f, 1.0f, 1.0f, 50.0f);
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(glm::value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+	
+		
+	M=glm::mat4(1.0f);
+	M=glm::rotate(M,180.0f,glm::vec3(0.0f,0.0f,1.0f));
+	//M=glm::rotate(M,-180.0f,glm::vec3(1.0f,0.0f,0.0f));
+	glLoadMatrixf(glm::value_ptr(V*M));
+}
 
 void displayFrame(void) {
 	glClearColor(0,0,0,1);
@@ -58,7 +91,8 @@ void displayFrame(void) {
 	rysuj_z_tex(&podloga,podlogaVertices,podlogatexVertices,podlogaVertexCount); 
 	rysuj_z_tex(&sufit,sufitVertices,sufittexVertices,sufitVertexCount); 
 	rysuj_z_tex(&tapeta,scianyVertices,scianytexVertices,scianyVertexCount); 
-
+	macierz_pianina();
+	rysuj_z_kolor(pudloVertices,pudloColors,pudloVertexCount); 
 	glutSwapBuffers();
 }
 
@@ -91,7 +125,7 @@ void wczytaj_teksture(GLuint *uchwyt, char *plik){
 int main(int argc, char* argv[]) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(1366,768);
+	glutInitWindowSize(800,800);
 	glutInitWindowPosition(0,0);
 	glutCreateWindow("Program OpenGL");        
 	glutDisplayFunc(displayFrame);
@@ -104,6 +138,7 @@ int main(int argc, char* argv[]) {
 	wczytaj_teksture(&podloga, "texture/deski.tga"); 
 	wczytaj_teksture(&sufit, "texture/sufit1.tga"); 
 
+	
 
 	glutMainLoop();	
 
