@@ -16,6 +16,7 @@ using namespace std;
 GLuint tapeta;
 GLuint podloga; 
 GLuint sufit;
+GLuint drewno; 
 TGAImg img;  
 
 void rysuj_z_tex(GLuint *uchwyt, float *ver, float *vertexture, int vercount) {
@@ -69,7 +70,7 @@ void macierz_pianina() {
 		glm::vec3(0.0f,0.0f,0.0f),
 		glm::vec3(0.0f,1.0f,0.0f));
 	
-	glm::mat4 P=glm::perspective(80.0f, 1.0f, 1.0f, 50.0f);
+	glm::mat4 P=glm::perspective(100.0f, 1.0f, 2.0f, 50.0f);
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(glm::value_ptr(P));
@@ -77,8 +78,11 @@ void macierz_pianina() {
 	
 		
 	M=glm::mat4(1.0f);
-	M=glm::rotate(M,180.0f,glm::vec3(0.0f,0.0f,1.0f));
-	//M=glm::rotate(M,-180.0f,glm::vec3(1.0f,0.0f,0.0f));
+	M=glm::rotate(M,180.0f,glm::vec3(1.0f,0.0f,0.0f));
+	M=glm::rotate(M,180.0f,glm::vec3(0.0f,1.0f,0.0f));
+	M=glm::rotate(M,15.0f,glm::vec3(0.0f,1.0f,0.0f));
+	M=glm::translate(M,glm::vec3(-0.5f,0.3f,2.5f));
+	//M=glm::rotate(M,angle_x,glm::vec3(1.0f,0.0f,0.0f));
 	glLoadMatrixf(glm::value_ptr(V*M));
 }
 
@@ -92,7 +96,7 @@ void displayFrame(void) {
 	rysuj_z_tex(&sufit,sufitVertices,sufittexVertices,sufitVertexCount); 
 	rysuj_z_tex(&tapeta,scianyVertices,scianytexVertices,scianyVertexCount); 
 	macierz_pianina();
-	rysuj_z_kolor(pudloVertices,pudloColors,pudloVertexCount); 
+	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertexCount); 
 	glutSwapBuffers();
 }
 
@@ -133,11 +137,12 @@ int main(int argc, char* argv[]) {
 	//Tutaj kod inicjujacy	
 	glewInit();
 
+	glEnable(GL_DEPTH_TEST);
 	/*Wczytywanie wszystkich tekstur */
 	wczytaj_teksture(&tapeta, "texture/sciana2.tga"); 
 	wczytaj_teksture(&podloga, "texture/deski.tga"); 
 	wczytaj_teksture(&sufit, "texture/sufit1.tga"); 
-
+	wczytaj_teksture(&drewno, "texture/drewno1.tga");
 	
 
 	glutMainLoop();	
