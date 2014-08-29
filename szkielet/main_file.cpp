@@ -46,17 +46,17 @@ void rysuj_z_kolor(float *ver, float *vercolor, int vercount) {
 void macierz_tla() {
 	glm::mat4 M;
 
-	M=glm::mat4(1.0f); //m zawiera macierz jednostkow¹(I)
+	M=glm::mat4(1.0f); //m zawiera macierz jednostkowÂ¹(I)
 	M=glm::rotate(M,-90.0f,glm::vec3(0.0f,0.0f,1.0f));
 	M=glm::rotate(M,-90.0f,glm::vec3(0.0f,1.0f,0.0f));
-	M=glm::scale(M,glm::vec3(4.0f,4.0f,4.0f));
+	M=glm::scale(M,glm::vec3(10.0f,15.0f,15.0f));
 
 	glm::mat4 V=glm::lookAt(
-		glm::vec3(3.0f, 0.0f,-4.0f),
-		glm::vec3(0.0f,-1.1f,0.0f),
+		glm::vec3(0.0f, 0.0f,-5.0f),
+		glm::vec3(0.0f,0.0f,0.0f),
 		glm::vec3(0.0f,1.0f,0.0f));
 
-	glm::mat4 P=glm::perspective(75.0f, 1.0f, 1.0f, 50.0f);
+	glm::mat4 P=glm::perspective(130.0f, 1.0f, 1.0f, 50.0f);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(glm::value_ptr(P));
@@ -70,7 +70,7 @@ void macierz_pianina() {
 		glm::vec3(0.0f,0.0f,0.0f),
 		glm::vec3(0.0f,1.0f,0.0f));
 	
-	glm::mat4 P=glm::perspective(100.0f, 1.0f, 2.0f, 50.0f);
+	glm::mat4 P=glm::perspective(100.0f, 1.0f,1.0f, 50.0f);
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(glm::value_ptr(P));
@@ -80,9 +80,9 @@ void macierz_pianina() {
 	M=glm::mat4(1.0f);
 	M=glm::rotate(M,180.0f,glm::vec3(1.0f,0.0f,0.0f));
 	M=glm::rotate(M,180.0f,glm::vec3(0.0f,1.0f,0.0f));
-	M=glm::rotate(M,15.0f,glm::vec3(0.0f,1.0f,0.0f));
-	M=glm::translate(M,glm::vec3(-0.5f,0.3f,2.5f));
-	//M=glm::rotate(M,angle_x,glm::vec3(1.0f,0.0f,0.0f));
+	M=glm::rotate(M,45.0f,glm::vec3(0.0f,1.0f,0.0f));
+	M=glm::translate(M,glm::vec3(2.3f,1.0f,-1.5f));
+	M=glm::scale(M,glm::vec3(0.5f, 0.8f, 0.5f));
 	glLoadMatrixf(glm::value_ptr(V*M));
 }
 
@@ -112,10 +112,10 @@ void wczytaj_teksture(GLuint *uchwyt, char *plik){
 			glTexImage2D(GL_TEXTURE_2D,0,4,img.GetWidth(),img.GetHeight(),0,
 			GL_RGBA,GL_UNSIGNED_BYTE,img.GetImg());
 		else {
-			//Obrazek 16 albo 8 bit, takimi siê nie przejmujemy
+			//Obrazek 16 albo 8 bit, takimi siÃª nie przejmujemy
 		}
 	} else {
-		//b³¹d
+		//bÂ³Â¹d
 	}
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -129,7 +129,7 @@ void wczytaj_teksture(GLuint *uchwyt, char *plik){
 int main(int argc, char* argv[]) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(800,800);
+	glutInitWindowSize(1366,768);
 	glutInitWindowPosition(0,0);
 	glutCreateWindow("Program OpenGL");        
 	glutDisplayFunc(displayFrame);
