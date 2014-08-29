@@ -97,7 +97,6 @@ void displayFrame(void) {
 	rysuj_z_tex(&tapeta,scianyVertices,scianytexVertices,scianyVertexCount); 
 	macierz_pianina();
 	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertexCount); 
-	rysuj_z_kolor(staticpokrywaVertices,staticpokrywaColors,staticpokrywaVertexCount);
 	glutSwapBuffers();
 }
 
