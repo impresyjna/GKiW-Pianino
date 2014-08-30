@@ -84,6 +84,27 @@ void macierz_pianina() {
 	glLoadMatrixf(glm::value_ptr(V*M));
 }
 
+void macierz_pokrywy() {
+	glm::mat4 M;
+	glm::mat4 V=glm::lookAt(
+		glm::vec3(0.0f,0.0f,-5.0f),
+		glm::vec3(0.0f,0.0f,0.0f),
+		glm::vec3(0.0f,1.0f,0.0f));
+	
+	glm::mat4 P=glm::perspective(100.0f, 1.0f,1.0f, 50.0f);
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(glm::value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+	
+		
+	M=glm::mat4(1.0f);
+	M=glm::rotate(M,-45.0f,glm::vec3(0.0f,1.0f,0.0f));
+	M=glm::translate(M,glm::vec3(-2.4f, -0.112f,-1.5f));
+	M=glm::scale(M,glm::vec3(0.5f, 0.8f, 0.5f));
+	glLoadMatrixf(glm::value_ptr(V*M));
+}
+
 void displayFrame(void) {
 	glClearColor(0,0,0,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -95,6 +116,8 @@ void displayFrame(void) {
 	rysuj_z_tex(&tapeta,scianyVertices,scianytexVertices,scianyVertexCount); 
 	macierz_pianina();
 	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertexCount);
+	macierz_pokrywy();
+	rysuj_z_tex(&drewno,movingpokrywaVertices, movingpokrywaTex, movingpokrywaVertexCount);
 	glutSwapBuffers();
 }
 
