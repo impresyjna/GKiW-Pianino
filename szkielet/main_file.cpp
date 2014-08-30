@@ -78,10 +78,8 @@ void macierz_pianina() {
 	
 		
 	M=glm::mat4(1.0f);
-	M=glm::rotate(M,180.0f,glm::vec3(1.0f,0.0f,0.0f));
-	M=glm::rotate(M,180.0f,glm::vec3(0.0f,1.0f,0.0f));
-	M=glm::rotate(M,45.0f,glm::vec3(0.0f,1.0f,0.0f));
-	M=glm::translate(M,glm::vec3(2.3f,1.0f,-1.5f));
+	M=glm::rotate(M,-45.0f,glm::vec3(0.0f,1.0f,0.0f));
+	M=glm::translate(M,glm::vec3(-2.4f,-1.0f,-1.5f));
 	M=glm::scale(M,glm::vec3(0.5f, 0.8f, 0.5f));
 	glLoadMatrixf(glm::value_ptr(V*M));
 }
@@ -96,7 +94,7 @@ void displayFrame(void) {
 	rysuj_z_tex(&sufit,sufitVertices,sufittexVertices,sufitVertexCount); 
 	rysuj_z_tex(&tapeta,scianyVertices,scianytexVertices,scianyVertexCount); 
 	macierz_pianina();
-	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertexCount); 
+	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertexCount);
 	glutSwapBuffers();
 }
 
@@ -115,7 +113,7 @@ void wczytaj_teksture(GLuint *uchwyt, char *plik){
 			//Obrazek 16 albo 8 bit, takimi siê nie przejmujemy
 		}
 	} else {
-		//b³¹d
+
 	}
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
