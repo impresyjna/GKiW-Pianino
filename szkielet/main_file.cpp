@@ -18,7 +18,9 @@ GLuint tapeta;
 GLuint podloga; 
 GLuint sufit;
 GLuint drewno; 
-TGAImg img;  
+TGAImg img; 
+mat4 pianino; 
+
 
 void rysuj_z_tex(GLuint *uchwyt, float *ver, float *vertexture, int vercount) {
 	glEnable(GL_TEXTURE_2D);
@@ -52,6 +54,7 @@ void macierz_tla() {
 	M=rotate(M,-90.0f, vec3(0.0f,1.0f,0.0f));
 	M=scale(M, vec3(10.0f,15.0f,15.0f));
 
+
 	mat4 V=lookAt(
 		vec3(0.0f, 0.0f,-5.0f),
 		vec3(0.0f,0.0f,0.0f),
@@ -82,6 +85,7 @@ void macierz_pianina() {
 	M=rotate(M,-45.0f, vec3(0.0f,1.0f,0.0f));
 	M=translate(M, vec3(-2.4f,-1.0f,-1.5f));
 	M=scale(M,vec3(0.5f, 0.8f, 0.5f));
+	pianino=M; 
 	glLoadMatrixf(value_ptr(V*M));
 }
 
@@ -107,6 +111,53 @@ void macierz_pokrywy(float uchyl) {
 	glLoadMatrixf(value_ptr(V*M));
 }
 
+void macierz_klawisza(float uchyl,float x) {
+	mat4 M;
+	mat4 V=lookAt(
+		vec3(0.0f,0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
+
+	mat4 P=perspective(100.0f, 1.0f,1.0f, 50.0f);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+
+
+	M=pianino;
+	M=translate(M,vec3(0.0f, 0.0f, -0.9f));
+	M=translate(M,vec3(0.0f, 0.2f, 0.0f));
+	M=translate(M,vec3(x, 0.0f, 0.0f));
+	M=rotate(M,4.0f, vec3(0.0f, 1.0f, 0.0f));
+	M=scale(M,vec3(0.13f, 0.1f, 0.25f));
+	glLoadMatrixf(value_ptr(V*M));
+}
+
+void macierz_black(float uchyl, float x){
+	mat4 M;
+	mat4 V=lookAt(
+		vec3(0.0f,0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
+
+	mat4 P=perspective(100.0f, 1.0f,1.0f, 50.0f);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+
+
+	M=pianino;
+	M=translate(M,vec3(0.0f, 0.0f, -0.9f));
+	M=translate(M,vec3(0.0f, 0.25f, 0.0f));
+	M=translate(M,vec3(x, 0.0f, 0.0f));
+	M=rotate(M,4.0f, vec3(0.0f, 1.0f, 0.0f));
+	M=scale(M,vec3(0.1f, 0.07f, 0.25f));
+	glLoadMatrixf(value_ptr(V*M));
+}
+
+
 void displayFrame(void) {
 	glClearColor(0,0,0,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -120,6 +171,39 @@ void displayFrame(void) {
 	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertexCount);
 	macierz_pokrywy(0.0f); //Argument to wartość typu float oznaczająca uchył pokrywy
 	rysuj_z_tex(&drewno,movingpokrywaVertices, movingpokrywaTex, movingpokrywaVertexCount);
+	macierz_klawisza(10.0f, -1.38); 
+	rysuj_z_kolor(bialy_prostyVertices, bialy_prostyColors, bialy_prostyVerCount);
+	int ktory=1; 
+	for(int i=0; i<4; i++)
+	{
+		for(int j=0; j<7; j++)
+		{
+			float x; 
+			x=-1.38+0.085*ktory;
+			ktory++;
+			macierz_klawisza(10.0f, x);
+			if(j==0 || j==4) {
+				rysuj_z_kolor(bialy_leftcutVertices, bialy_onesidecutColors, bialy_leftcutVerCount);
+			}
+			if(j==3 || j==6) rysuj_z_kolor(bialy_rightcutVertices, bialy_onesidecutColors, bialy_rightcutVerCount);
+			else rysuj_z_kolor(bialy_twosidecutVertices, bialy_twosidecutColors, bialy_twosidecutVerCount);
+		}
+	}
+
+	ktory=0;
+	for(int i=0; i<4; i++)
+	{
+		for(int j=0; j<7; j++)
+		{
+			float x;
+			x=-1.285+0.085*ktory;
+			macierz_black(10.0f, x);
+			ktory++;
+			if(j!=3 && j!=6) rysuj_z_kolor(czarnyVertices, czarnyColors, czarnyVerCount);
+		}
+	}
+
+
 	glutSwapBuffers();
 }
 
