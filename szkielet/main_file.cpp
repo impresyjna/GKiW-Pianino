@@ -12,6 +12,7 @@
 #include <string>
 
 using namespace std; 
+using namespace glm; 
 
 GLuint tapeta;
 GLuint podloga; 
@@ -40,69 +41,70 @@ void rysuj_z_kolor(float *ver, float *vercolor, int vercount) {
 	glDrawArrays(GL_QUADS,0,vercount);
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);	
-	
+
 }
 
 void macierz_tla() {
-	glm::mat4 M;
+	mat4 M;
 
-	M=glm::mat4(1.0f); //m zawiera macierz jednostkow¹(I)
-	M=glm::rotate(M,-90.0f,glm::vec3(0.0f,0.0f,1.0f));
-	M=glm::rotate(M,-90.0f,glm::vec3(0.0f,1.0f,0.0f));
-	M=glm::scale(M,glm::vec3(10.0f,15.0f,15.0f));
+	M=mat4(1.0f); //m zawiera macierz jednostkow¹(I)
+	M=rotate(M,-90.0f, vec3(0.0f,0.0f,1.0f));
+	M=rotate(M,-90.0f, vec3(0.0f,1.0f,0.0f));
+	M=scale(M, vec3(10.0f,15.0f,15.0f));
 
-	glm::mat4 V=glm::lookAt(
-		glm::vec3(0.0f, 0.0f,-5.0f),
-		glm::vec3(0.0f,0.0f,0.0f),
-		glm::vec3(0.0f,1.0f,0.0f));
+	mat4 V=lookAt(
+		vec3(0.0f, 0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
 
-	glm::mat4 P=glm::perspective(130.0f, 1.0f, 1.0f, 50.0f);
+	mat4 P=perspective(130.0f, 1.0f, 1.0f, 50.0f);
 
 	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(glm::value_ptr(P));
+	glLoadMatrixf(value_ptr(P));
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(glm::value_ptr(V*M));
+	glLoadMatrixf(value_ptr(V*M));
 };
 void macierz_pianina() {
-	glm::mat4 M;
-	glm::mat4 V=glm::lookAt(
-		glm::vec3(0.0f,0.0f,-5.0f),
-		glm::vec3(0.0f,0.0f,0.0f),
-		glm::vec3(0.0f,1.0f,0.0f));
-	
-	glm::mat4 P=glm::perspective(100.0f, 1.0f,1.0f, 50.0f);
-	
+	mat4 M;
+	mat4 V=glm::lookAt(
+		vec3(0.0f,0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
+
+	mat4 P=perspective(100.0f, 1.0f,1.0f, 50.0f);
+
 	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(glm::value_ptr(P));
+	glLoadMatrixf(value_ptr(P));
 	glMatrixMode(GL_MODELVIEW);
-	
-		
-	M=glm::mat4(1.0f);
-	M=glm::rotate(M,-45.0f,glm::vec3(0.0f,1.0f,0.0f));
-	M=glm::translate(M,glm::vec3(-2.4f,-1.0f,-1.5f));
-	M=glm::scale(M,glm::vec3(0.5f, 0.8f, 0.5f));
-	glLoadMatrixf(glm::value_ptr(V*M));
+
+
+	M=mat4(1.0f);
+	M=rotate(M,-45.0f, vec3(0.0f,1.0f,0.0f));
+	M=translate(M, vec3(-2.4f,-1.0f,-1.5f));
+	M=scale(M,vec3(0.5f, 0.8f, 0.5f));
+	glLoadMatrixf(value_ptr(V*M));
 }
 
-void macierz_pokrywy() {
-	glm::mat4 M;
-	glm::mat4 V=glm::lookAt(
-		glm::vec3(0.0f,0.0f,-5.0f),
-		glm::vec3(0.0f,0.0f,0.0f),
-		glm::vec3(0.0f,1.0f,0.0f));
-	
-	glm::mat4 P=glm::perspective(100.0f, 1.0f,1.0f, 50.0f);
-	
+void macierz_pokrywy(float uchyl) {
+	mat4 M;
+	mat4 V=lookAt(
+		vec3(0.0f,0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
+
+	mat4 P=perspective(100.0f, 1.0f,1.0f, 50.0f);
+
 	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(glm::value_ptr(P));
+	glLoadMatrixf(value_ptr(P));
 	glMatrixMode(GL_MODELVIEW);
-	
-		
-	M=glm::mat4(1.0f);
-	M=glm::rotate(M,-45.0f,glm::vec3(0.0f,1.0f,0.0f));
-	M=glm::translate(M,glm::vec3(-2.4f, -0.112f,-1.5f));
-	M=glm::scale(M,glm::vec3(0.5f, 0.8f, 0.5f));
-	glLoadMatrixf(glm::value_ptr(V*M));
+
+
+	M=mat4(1.0f);
+	M=translate(M,vec3(-0.65f, -0.113f,-2.75f));
+	M=rotate(M,-45.0f,vec3(0.0f,1.0f,0.0f));
+	M=rotate(M,uchyl,vec3(1.0f,0.0f,0.0f));
+	M=scale(M,vec3(0.5f, 0.8f, 0.5f));
+	glLoadMatrixf(value_ptr(V*M));
 }
 
 void displayFrame(void) {
@@ -116,7 +118,7 @@ void displayFrame(void) {
 	rysuj_z_tex(&tapeta,scianyVertices,scianytexVertices,scianyVertexCount); 
 	macierz_pianina();
 	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertexCount);
-	macierz_pokrywy();
+	macierz_pokrywy(0.0f); //Argument to wartość typu float oznaczająca uchył pokrywy
 	rysuj_z_tex(&drewno,movingpokrywaVertices, movingpokrywaTex, movingpokrywaVertexCount);
 	glutSwapBuffers();
 }
@@ -164,7 +166,7 @@ int main(int argc, char* argv[]) {
 	wczytaj_teksture(&podloga, "texture/deski.tga"); 
 	wczytaj_teksture(&sufit, "texture/sufit1.tga"); 
 	wczytaj_teksture(&drewno, "texture/drewno1.tga");
-	
+
 
 	glutMainLoop();	
 
