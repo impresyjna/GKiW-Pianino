@@ -20,6 +20,8 @@ GLuint sufit;
 GLuint drewno; 
 TGAImg img; 
 mat4 pianino; 
+float obrot_biale[28];
+float obrot_czarne[20];
 
 
 void rysuj_z_tex(GLuint *uchwyt, float *ver, float *vertexture, int vercount) {
@@ -130,6 +132,7 @@ void macierz_klawisza(float uchyl,float x) {
 	M=translate(M,vec3(0.0f, 0.2f, 0.0f));
 	M=translate(M,vec3(x, 0.0f, 0.0f));
 	M=rotate(M,4.0f, vec3(0.0f, 1.0f, 0.0f));
+	M=rotate(M,-10.0f, vec3(0.0f, 0.0f, 1.0f));
 	M=scale(M,vec3(0.13f, 0.1f, 0.25f));
 	glLoadMatrixf(value_ptr(V*M));
 }
@@ -153,6 +156,7 @@ void macierz_black(float uchyl, float x){
 	M=translate(M,vec3(0.0f, 0.25f, 0.0f));
 	M=translate(M,vec3(x, 0.0f, 0.0f));
 	M=rotate(M,4.0f, vec3(0.0f, 1.0f, 0.0f));
+	//M=rotate(M,-10.0f, vec3(0.0f, 1.0f, 0.0f));
 	M=scale(M,vec3(0.1f, 0.07f, 0.25f));
 	glLoadMatrixf(value_ptr(V*M));
 }
@@ -181,7 +185,7 @@ void displayFrame(void) {
 			float x; 
 			x=-1.38+0.085*ktory;
 			ktory++;
-			macierz_klawisza(10.0f, x);
+			macierz_klawisza(obrot_biale[ktory], x);
 			if(j==0 || j==4) {
 				rysuj_z_kolor(bialy_leftcutVertices, bialy_onesidecutColors, bialy_leftcutVerCount);
 			}
@@ -189,7 +193,6 @@ void displayFrame(void) {
 			else rysuj_z_kolor(bialy_twosidecutVertices, bialy_twosidecutColors, bialy_twosidecutVerCount);
 		}
 	}
-
 	ktory=0;
 	for(int i=0; i<4; i++)
 	{
@@ -197,12 +200,11 @@ void displayFrame(void) {
 		{
 			float x;
 			x=-1.285+0.085*ktory;
-			macierz_black(10.0f, x);
+			macierz_black(obrot_czarne[ktory], x);
 			ktory++;
 			if(j!=3 && j!=6) rysuj_z_kolor(czarnyVertices, czarnyColors, czarnyVerCount);
 		}
 	}
-
 
 	glutSwapBuffers();
 }
@@ -251,7 +253,16 @@ int main(int argc, char* argv[]) {
 	wczytaj_teksture(&sufit, "texture/sufit1.tga"); 
 	wczytaj_teksture(&drewno, "texture/drewno1.tga");
 
+	for(int i=0; i<28; i++)
+	{
+		obrot_biale[i]=10.0; 
+	}
+	for(int i=0; i<20; i++)
+	{
+		obrot_czarne[i]=10.0;
+	}
 
+	obrot_biale[0]=-10.0f; 
 	glutMainLoop();	
 
 	glDeleteTextures(1,&sufit);
