@@ -20,6 +20,8 @@ GLuint sufit;
 GLuint drewno; 
 TGAImg img; 
 mat4 pianino; 
+float obrot_biale[29];
+float obrot_czarne[20];
 
 
 void rysuj_z_tex(GLuint *uchwyt, float *ver, float *vertexture, int vercount) {
@@ -130,6 +132,7 @@ void macierz_klawisza(float uchyl,float x) {
 	M=translate(M,vec3(0.0f, 0.2f, 0.0f));
 	M=translate(M,vec3(x, 0.0f, 0.0f));
 	M=rotate(M,4.0f, vec3(0.0f, 1.0f, 0.0f));
+	M=rotate(M,uchyl, vec3(1.0f, 0.0f, 0.0f));
 	M=scale(M,vec3(0.13f, 0.1f, 0.25f));
 	glLoadMatrixf(value_ptr(V*M));
 }
@@ -153,6 +156,7 @@ void macierz_black(float uchyl, float x){
 	M=translate(M,vec3(0.0f, 0.25f, 0.0f));
 	M=translate(M,vec3(x, 0.0f, 0.0f));
 	M=rotate(M,4.0f, vec3(0.0f, 1.0f, 0.0f));
+	M=rotate(M,uchyl, vec3(1.0f, 0.0f, 0.0f));
 	M=scale(M,vec3(0.1f, 0.07f, 0.25f));
 	glLoadMatrixf(value_ptr(V*M));
 }
@@ -171,7 +175,7 @@ void displayFrame(void) {
 	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertexCount);
 	macierz_pokrywy(0.0f); //Argument to wartość typu float oznaczająca uchył pokrywy
 	rysuj_z_tex(&drewno,movingpokrywaVertices, movingpokrywaTex, movingpokrywaVertexCount);
-	macierz_klawisza(10.0f, -1.38); 
+	macierz_klawisza(obrot_biale[0], -1.38); 
 	rysuj_z_kolor(bialy_prostyVertices, bialy_prostyColors, bialy_prostyVerCount);
 	int ktory=1; 
 	for(int i=0; i<4; i++)
@@ -179,9 +183,9 @@ void displayFrame(void) {
 		for(int j=0; j<7; j++)
 		{
 			float x; 
-			x=-1.38+0.085*ktory;
+			x=-1.40+0.085*ktory;
+			macierz_klawisza(obrot_biale[ktory], x);
 			ktory++;
-			macierz_klawisza(10.0f, x);
 			if(j==0 || j==4) {
 				rysuj_z_kolor(bialy_leftcutVertices, bialy_onesidecutColors, bialy_leftcutVerCount);
 			}
@@ -196,8 +200,8 @@ void displayFrame(void) {
 		for(int j=0; j<7; j++)
 		{
 			float x;
-			x=-1.285+0.085*ktory;
-			macierz_black(10.0f, x);
+			x=-1.305+0.085*ktory;
+			macierz_black(obrot_czarne[ktory], x);
 			ktory++;
 			if(j!=3 && j!=6) rysuj_z_kolor(czarnyVertices, czarnyColors, czarnyVerCount);
 		}
@@ -250,6 +254,19 @@ int main(int argc, char* argv[]) {
 	wczytaj_teksture(&podloga, "texture/deski.tga"); 
 	wczytaj_teksture(&sufit, "texture/sufit1.tga"); 
 	wczytaj_teksture(&drewno, "texture/drewno1.tga");
+
+	for(int i=0; i<29; i++)
+	{
+		obrot_biale[i]=6.0; 
+	}
+
+	for(int i=0; i<20; i++)
+	{
+		obrot_czarne[i]=6.0; 
+	}
+
+	obrot_biale[3]=1.0; 
+	/*polecam wartości od 6.0 do 1.0 żeby nacisnac bo bez swiatla wyglada to znosnie, pewnie potem bedzie troche lepiej i troche mniej ale to juz latwo dopracowac */
 
 
 	glutMainLoop();	
