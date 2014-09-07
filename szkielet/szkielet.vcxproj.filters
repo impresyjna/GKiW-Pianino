@@ -35,5 +35,8 @@
     <ClInclude Include="pianino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="okno.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,6 +9,7 @@
 #include "tlo.h"
 #include "klawisze.h"
 #include "pianino.h"
+#include "okno.h"
 #include <string>
 
 using namespace std; 
@@ -18,11 +19,15 @@ GLuint tapeta;
 GLuint podloga; 
 GLuint sufit;
 GLuint drewno; 
+
 TGAImg img; 
+
 mat4 pianino; 
+mat4 tlo; 
+mat4 lampa; 
+
 float obrot_biale[29];
 float obrot_czarne[20];
-
 
 void rysuj_z_tex(GLuint *uchwyt, float *ver, float *vertexture, int vercount) {
 	glEnable(GL_TEXTURE_2D);
@@ -56,6 +61,7 @@ void macierz_tla() {
 	M=rotate(M,-90.0f, vec3(0.0f,1.0f,0.0f));
 	M=scale(M, vec3(10.0f,15.0f,15.0f));
 
+	tlo=M; 
 
 	mat4 V=lookAt(
 		vec3(0.0f, 0.0f,-5.0f),
@@ -69,6 +75,7 @@ void macierz_tla() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(value_ptr(V*M));
 };
+
 void macierz_pianina() {
 	mat4 M;
 	mat4 V=glm::lookAt(
@@ -161,16 +168,69 @@ void macierz_black(float uchyl, float x){
 	glLoadMatrixf(value_ptr(V*M));
 }
 
+void macierz_podstawka() {
+	mat4 M;
+	mat4 V=lookAt(
+		vec3(0.0f,0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
 
-void displayFrame(void) {
-	glClearColor(0,0,0,1);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	mat4 P=perspective(100.0f, 1.0f,1.0f, 50.0f);
 
-	/* Rysowanie podlogi,sufitu i scian */
-	macierz_tla(); 
-	rysuj_z_tex(&podloga,podlogaVertices,podlogatexVertices,podlogaVertexCount); 
-	rysuj_z_tex(&sufit,sufitVertices,sufittexVertices,sufitVertexCount); 
-	rysuj_z_tex(&tapeta,scianyVertices,scianytexVertices,scianyVertexCount); 
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+
+
+	M=tlo;
+	M=translate(M,vec3(0.1f, 0.2f, -0.3f));
+	M=scale(M,vec3(0.07f, 0.07f, 0.07f));
+	lampa=M; 
+	glLoadMatrixf(value_ptr(V*M));
+};
+
+void macierz_draga() {
+	mat4 M;
+	mat4 V=lookAt(
+		vec3(0.0f,0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
+
+	mat4 P=perspective(100.0f, 1.0f,1.0f, 50.0f);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+
+
+	M=tlo;
+	M=translate(M,vec3(0.1f, 0.2f, -0.15f));
+	M=rotate(M, 90.f,vec3(1.0f, 0.0f, 0.0f)); 
+	M=scale(M,vec3(0.03f, 0.35f, 0.03f)); 
+	glLoadMatrixf(value_ptr(V*M));
+};
+
+void macierz_abazuru(float z) {
+	mat4 M;
+	mat4 V=lookAt(
+		vec3(0.0f,0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
+
+	mat4 P=perspective(100.0f, 1.0f,1.0f, 50.0f);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+
+
+	M=tlo;
+	M=translate(M,vec3(0.1f, 0.2f, z));
+	M=scale(M,vec3(0.07f, 0.07f, 0.07f)); 
+	glLoadMatrixf(value_ptr(V*M));
+};
+
+void rysuj_pianino(){
 	macierz_pianina();
 	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertexCount);
 	macierz_pokrywy(0.0f); //Argument to wartość typu float oznaczająca uchył pokrywy
@@ -206,7 +266,40 @@ void displayFrame(void) {
 			if(j!=3 && j!=6) rysuj_z_kolor(czarnyVertices, czarnyColors, czarnyVerCount);
 		}
 	}
+}
 
+void rysuj_lampe(){
+	macierz_podstawka();
+	glutSolidTorus(0.2, 0.4, 10, 20);
+	macierz_draga();
+	glutSolidTorus(0.2, 0.3, 10, 20); 
+	macierz_abazuru(0.0f); 
+	glutSolidTorus(0.2, 0.4, 10, 20);
+	macierz_abazuru(0.02f);
+	glutSolidTorus(0.2, 0.35, 10, 20);
+	macierz_abazuru(0.04f);
+	glutSolidTorus(0.2, 0.30, 10, 20);
+	macierz_abazuru(0.06f);
+	glutSolidTorus(0.2, 0.25, 10, 20);
+	macierz_abazuru(0.08f);
+	glutSolidTorus(0.2, 0.2, 10, 20);
+}
+
+void displayFrame(void) {
+	glClearColor(0,0,0,1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	/* Rysowanie podlogi,sufitu i scian */
+	macierz_tla(); 
+	rysuj_z_tex(&podloga,podlogaVertices,podlogatexVertices,podlogaVertexCount); 
+	rysuj_z_tex(&sufit,sufitVertices,sufittexVertices,sufitVertexCount); 
+	rysuj_z_tex(&tapeta,scianyVertices,scianytexVertices,scianyVertexCount);
+
+	/* Rysowanie pianina z klawiszami */ 
+	rysuj_pianino(); 
+
+	/* Rysowanie lampy oteksturowanej */
+	rysuj_lampe();
 
 	glutSwapBuffers();
 }

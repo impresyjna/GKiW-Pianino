@@ -1,4 +1,4 @@
-﻿Build started 2014-09-02 23:06:14.
+﻿Build started 2014-09-07 16:21:02.
      1>Project "D:\Asia\Documents\GitHub\Pianino\szkielet\szkielet.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Gry\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _VC80_UPGRADE=0x0710 /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt main_file.cpp
@@ -12,4 +12,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:05.09
+Time Elapsed 00:00:05.76
