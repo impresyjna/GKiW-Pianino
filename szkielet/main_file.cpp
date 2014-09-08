@@ -10,6 +10,7 @@
 #include "klawisze.h"
 #include "pianino.h"
 #include "okno.h"
+#include "stolek.h"
 #include <string>
 
 using namespace std; 
@@ -230,6 +231,29 @@ void macierz_abazuru(float z) {
 	glLoadMatrixf(value_ptr(V*M));
 };
 
+void macierz_stolka() {
+	mat4 M;
+	mat4 V=lookAt(
+		vec3(0.0f,0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
+
+	mat4 P=perspective(100.0f, 1.0f,1.0f, 50.0f);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+
+
+	M=pianino;
+	M=translate(M,vec3(0.0f, 0.0f, -1.3f));
+	M=translate(M,vec3(0.0f, -0.5f, 0.0f));
+	//M=translate(M, vec3(1.0f, 0.0f, 0.0f)); 
+	//M=rotate(M,4.0f, vec3(0.0f, 1.0f, 0.0f));
+	M=scale(M,vec3(1.0f, 0.6f, 0.2f));
+	glLoadMatrixf(value_ptr(V*M));
+}
+
 void rysuj_pianino(){
 	macierz_pianina();
 	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertexCount);
@@ -300,6 +324,9 @@ void displayFrame(void) {
 
 	/* Rysowanie lampy oteksturowanej */
 	rysuj_lampe();
+
+	macierz_stolka();
+	rysuj_z_tex(&drewno, stolekVertices, stolekTexCoord, stolekVertexCount); 
 
 	glutSwapBuffers();
 }
