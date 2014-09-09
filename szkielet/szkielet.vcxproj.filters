@@ -41,5 +41,8 @@
     <ClInclude Include="stolek.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="obraz.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

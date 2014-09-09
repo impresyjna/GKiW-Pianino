@@ -11,6 +11,7 @@
 #include "pianino.h"
 #include "okno.h"
 #include "stolek.h"
+#include "obraz.h"
 #include <string>
 
 using namespace std; 
@@ -20,6 +21,7 @@ GLuint tapeta;
 GLuint podloga; 
 GLuint sufit;
 GLuint drewno; 
+GLuint obraz; 
 
 TGAImg img; 
 
@@ -254,6 +256,27 @@ void macierz_stolka() {
 	glLoadMatrixf(value_ptr(V*M));
 }
 
+void macierz_obrazu(){
+	mat4 M;
+	mat4 V=lookAt(
+		vec3(0.0f,0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
+
+	mat4 P=perspective(100.0f, 1.0f,1.0f, 50.0f);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+
+
+	M=tlo;
+	M=translate(M,vec3(0.0f, 0.0f, 0.07f));
+	M=scale(M,vec3(0.05f, 0.05f, 0.07f));
+	M=rotate(M, 90.0f, vec3(0.0f, 1.0f, 0.0f)); 
+	glLoadMatrixf(value_ptr(V*M));
+}
+
 void rysuj_pianino(){
 	macierz_pianina();
 	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertexCount);
@@ -294,9 +317,11 @@ void rysuj_pianino(){
 
 void rysuj_lampe(){
 	macierz_podstawka();
+	glColor3ub(148, 139, 139); 
 	glutSolidTorus(0.2, 0.4, 10, 20);
 	macierz_draga();
 	glutSolidTorus(0.2, 0.3, 10, 20); 
+	glColor3ub(58, 44, 148); 
 	macierz_abazuru(0.0f); 
 	glutSolidTorus(0.2, 0.4, 10, 20);
 	macierz_abazuru(0.02f);
@@ -307,6 +332,7 @@ void rysuj_lampe(){
 	glutSolidTorus(0.2, 0.25, 10, 20);
 	macierz_abazuru(0.08f);
 	glutSolidTorus(0.2, 0.2, 10, 20);
+	glColor3ub(255, 255, 255); 
 }
 
 void displayFrame(void) {
@@ -327,6 +353,10 @@ void displayFrame(void) {
 
 	macierz_stolka();
 	rysuj_z_tex(&drewno, stolekVertices, stolekTexCoord, stolekVertexCount); 
+
+	macierz_obrazu(); 
+	rysuj_z_tex(&drewno, rama_oVertices, rama_oTexVertices, rama_oVertexCount); 
+	rysuj_z_tex(&obraz, obrazVertices, obrazTexVertices, obrazVertexCount); 
 
 	glutSwapBuffers();
 }
@@ -374,6 +404,7 @@ int main(int argc, char* argv[]) {
 	wczytaj_teksture(&podloga, "texture/deski.tga"); 
 	wczytaj_teksture(&sufit, "texture/sufit1.tga"); 
 	wczytaj_teksture(&drewno, "texture/drewno1.tga");
+	wczytaj_teksture(&obraz, "texture/obraz.tga"); 
 
 	for(int i=0; i<29; i++)
 	{
@@ -394,6 +425,8 @@ int main(int argc, char* argv[]) {
 	glDeleteTextures(1,&sufit);
 	glDeleteTextures(1,&tapeta);
 	glDeleteTextures(1,&podloga);
+	glDeleteTextures(1,&drewno); 
+	glDeleteTextures(1,&obraz); 
 
 	return 0;
 }
