@@ -35,14 +35,5 @@
     <ClInclude Include="pianino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="okno.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stolek.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="obraz.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

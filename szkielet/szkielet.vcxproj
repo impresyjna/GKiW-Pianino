@@ -102,10 +102,7 @@
     <ClCompile Include="tga.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="obraz.h" />
-    <ClInclude Include="stolek.h" />
     <ClInclude Include="klawisze.h" />
-    <ClInclude Include="okno.h" />
     <ClInclude Include="pianino.h" />
     <ClInclude Include="tga.h" />
     <ClInclude Include="tlo.h" />
