@@ -87,6 +87,29 @@ void macierz_tla() {
 	glLoadMatrixf(value_ptr(V*M));
 };
 
+void macierz_tla2() {
+	mat4 M;
+
+	M=mat4(1.0f); //m zawiera macierz jednostkow¹(I)
+	M=rotate(M,-90.0f, vec3(0.0f,0.0f,1.0f));
+	M=rotate(M,-90.0f, vec3(0.0f,1.0f,0.0f));
+	M=scale(M, vec3(10.0f,30.0f,30.0f));
+
+	tlo=M; 
+
+	mat4 V=lookAt(
+		vec3(0.0f, 0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
+
+	mat4 P=perspective(130.0f, 1.0f, 1.0f, 50.0f);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(value_ptr(V*M));
+};
+
 void macierz_pianina() {
 	mat4 M;
 	mat4 V=glm::lookAt(
@@ -106,6 +129,27 @@ void macierz_pianina() {
 	M=translate(M, vec3(-2.4f,-1.0f,-1.5f));
 	M=scale(M,vec3(0.5f, 0.8f, 0.5f));
 	pianino=M; 
+	glLoadMatrixf(value_ptr(V*M));
+}
+
+void macierz_strun() {
+	mat4 M;
+	mat4 V=glm::lookAt(
+		vec3(0.0f,0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
+
+	mat4 P=perspective(100.0f, 1.0f,1.0f, 50.0f);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+
+
+	M=mat4(1.0f);
+	//M=rotate(M,-30.0f, vec3(0.0f,1.0f,0.0f));
+	M=translate(M, vec3(0.0f,0.0f,-1.0f));
+	M=scale(M,vec3(0.03f, 9.0f, 0.03f));
 	glLoadMatrixf(value_ptr(V*M));
 }
 
@@ -310,27 +354,27 @@ void rysuj_pianino(){
 	}
 
 	ktory=0;
-		int kolejny=0;
-		for(int i=0; i<4; i++)
+	int kolejny=0;
+	for(int i=0; i<4; i++)
+	{
+		for(int j=0; j<7; j++)
 		{
-			for(int j=0; j<7; j++)
+			float x;
+			x=-1.305+0.085*ktory;
+			macierz_black(obrot_czarne[kolejny], x);
+			ktory++;
+			if(j!=3 && j!=6)
 			{
-				float x;
-				x=-1.305+0.085*ktory;
-				macierz_black(obrot_czarne[kolejny], x);
-				ktory++;
-				if(j!=3 && j!=6)
-				{
-					rysuj_z_kolor(czarnyVertices, czarnyColors, czarnyVerCount);
-					kolejny++;
-				}
+				rysuj_z_kolor(czarnyVertices, czarnyColors, czarnyVerCount);
+				kolejny++;
 			}
 		}
-		if((klawisz==-1)&&(klawisz_pom!=-1))
-		{
-			klawisz=klawisz_pom;
-			klawisz_pom=-1;
-		}
+	}
+	if((klawisz==-1)&&(klawisz_pom!=-1))
+	{
+		klawisz=klawisz_pom;
+		klawisz_pom=-1;
+	}
 }
 
 void rysuj_lampe(){
@@ -359,28 +403,39 @@ void displayFrame(void) {
 
 	if(podniesione==0)
 	{
-	/* Rysowanie podlogi,sufitu i scian */
-	macierz_tla(); 
-	rysuj_z_tex(&podloga,podlogaVertices,podlogatexVertices,podlogaVertexCount); 
-	rysuj_z_tex(&sufit,sufitVertices,sufittexVertices,sufitVertexCount); 
-	rysuj_z_tex(&tapeta,scianyVertices,scianytexVertices,scianyVertexCount);
+		/* Rysowanie podlogi,sufitu i scian */
+		macierz_tla(); 
+		rysuj_z_tex(&podloga,podlogaVertices,podlogatexVertices,podlogaVertexCount); 
+		rysuj_z_tex(&sufit,sufitVertices,sufittexVertices,sufitVertexCount); 
+		rysuj_z_tex(&tapeta,scianyVertices,scianytexVertices,scianyVertexCount);
 
-	/* Rysowanie pianina z klawiszami */ 
-	rysuj_pianino(); 
+		/* Rysowanie pianina z klawiszami */ 
+		rysuj_pianino(); 
 
-	/* Rysowanie lampy oteksturowanej */
-	rysuj_lampe();
+		/* Rysowanie lampy oteksturowanej */
+		rysuj_lampe();
 
-	macierz_stolka();
-	rysuj_z_tex(&drewno, stolekVertices, stolekTexCoord, stolekVertexCount); 
+		macierz_stolka();
+		rysuj_z_tex(&drewno, stolekVertices, stolekTexCoord, stolekVertexCount); 
 
-	macierz_obrazu(); 
-	rysuj_z_tex(&drewno, rama_oVertices, rama_oTexVertices, rama_oVertexCount); 
-	rysuj_z_tex(&obraz, obrazVertices, obrazTexVertices, obrazVertexCount); 
-}
+		macierz_obrazu(); 
+		rysuj_z_tex(&drewno, rama_oVertices, rama_oTexVertices, rama_oVertexCount); 
+		rysuj_z_tex(&obraz, obrazVertices, obrazTexVertices, obrazVertexCount); 
+		float lightPos[]={10, 10, 10, 1.0};
+		glLightfv(GL_LIGHT0,GL_POSITION,lightPos);
+
+	}
 	else if(podniesione==1)
 	{
-		//Kod dla środka
+		macierz_tla2(); 
+		rysuj_z_tex(&drewno,podlogaVertices,podlogatexVertices,podlogaVertexCount); 
+		rysuj_z_tex(&drewno,sufitVertices,sufittexVertices,sufitVertexCount); 
+		rysuj_z_tex(&drewno,scianyVertices,scianytexVertices,scianyVertexCount);
+
+		macierz_strun();
+		glDisable(GL_TEXTURE_2D);
+		glColor3ub(255, 255, 255); 
+		glutSolidCube(1.0); 
 	}
 	glutSwapBuffers();
 }
@@ -451,7 +506,7 @@ void keyFunc(unsigned char key, int x, int y)
 {
 	switch(key)
 	{
-		case '`':
+	case '`':
 		{
 			if((podniesione==0)&&(podnoszenie==0)&&(opuszczanie==0))
 			{
@@ -466,7 +521,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '1':
+	case '1':
 		{
 			if(klawisz==-1)
 			{
@@ -483,7 +538,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '2':
+	case '2':
 		{
 			if(klawisz==-1)
 			{
@@ -500,7 +555,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '3':
+	case '3':
 		{
 			if(klawisz==-1)
 			{
@@ -517,7 +572,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '4':
+	case '4':
 		{
 			if(klawisz==-1)
 			{
@@ -534,7 +589,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '5':
+	case '5':
 		{
 			if(klawisz==-1)
 			{
@@ -551,7 +606,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '6':
+	case '6':
 		{
 			if(klawisz==-1)
 			{
@@ -568,7 +623,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '7':
+	case '7':
 		{
 			if(klawisz==-1)
 			{
@@ -585,7 +640,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '8':
+	case '8':
 		{
 			if(klawisz==-1)
 			{
@@ -602,7 +657,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'q':
+	case 'q':
 		{
 			if(klawisz==-1)
 			{
@@ -619,7 +674,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'w':
+	case 'w':
 		{
 			if(klawisz==-1)
 			{
@@ -636,7 +691,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'e':
+	case 'e':
 		{
 			if(klawisz==-1)
 			{
@@ -653,7 +708,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'r':
+	case 'r':
 		{
 			if(klawisz==-1)
 			{
@@ -670,7 +725,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 't':
+	case 't':
 		{
 			if(klawisz==-1)
 			{
@@ -687,7 +742,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'y':
+	case 'y':
 		{
 			if(klawisz==-1)
 			{
@@ -704,7 +759,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'u':
+	case 'u':
 		{
 			if(klawisz==-1)
 			{
@@ -721,7 +776,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'i':
+	case 'i':
 		{
 			if(klawisz==-1)
 			{
@@ -738,7 +793,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'a':
+	case 'a':
 		{
 			if(klawisz==-1)
 			{
@@ -755,7 +810,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 's':
+	case 's':
 		{
 			if(klawisz==-1)
 			{
@@ -772,7 +827,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'd':
+	case 'd':
 		{
 			if(klawisz==-1)
 			{
@@ -789,7 +844,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'f':
+	case 'f':
 		{
 			if(klawisz==-1)
 			{
@@ -806,7 +861,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'g':
+	case 'g':
 		{
 			if(klawisz==-1)
 			{
@@ -823,7 +878,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'h':
+	case 'h':
 		{
 			if(klawisz==-1)
 			{
@@ -840,7 +895,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'j':
+	case 'j':
 		{
 			if(klawisz==-1)
 			{
@@ -857,7 +912,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'k':
+	case 'k':
 		{
 			if(klawisz==-1)
 			{
@@ -874,7 +929,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'z':
+	case 'z':
 		{
 			if(klawisz==-1)
 			{
@@ -891,7 +946,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'x':
+	case 'x':
 		{
 			if(klawisz==-1)
 			{
@@ -908,7 +963,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'c':
+	case 'c':
 		{
 			if(klawisz==-1)
 			{
@@ -925,7 +980,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'v':
+	case 'v':
 		{
 			if(klawisz==-1)
 			{
@@ -942,7 +997,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'b':
+	case 'b':
 		{
 			if(klawisz==-1)
 			{
@@ -959,7 +1014,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'n':
+	case 'n':
 		{
 			if(klawisz==-1)
 			{
@@ -976,7 +1031,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'm':
+	case 'm':
 		{
 			if(klawisz==-1)
 			{
@@ -993,7 +1048,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case ',':
+	case ',':
 		{
 			if(klawisz==-1)
 			{
@@ -1010,7 +1065,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'N':
+	case 'N':
 		{
 			if(klawisz==-1)
 			{
@@ -1027,7 +1082,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'B':
+	case 'B':
 		{
 			if(klawisz==-1)
 			{
@@ -1044,7 +1099,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'V':
+	case 'V':
 		{
 			if(klawisz==-1)
 			{
@@ -1061,7 +1116,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'X':
+	case 'X':
 		{
 			if(klawisz==-1)
 			{
@@ -1078,7 +1133,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'Z':
+	case 'Z':
 		{
 			if(klawisz==-1)
 			{
@@ -1095,7 +1150,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'H':
+	case 'H':
 		{
 			if(klawisz==-1)
 			{
@@ -1112,7 +1167,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'G':
+	case 'G':
 		{
 			if(klawisz==-1)
 			{
@@ -1129,7 +1184,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'F':
+	case 'F':
 		{
 			if(klawisz==-1)
 			{
@@ -1146,7 +1201,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'S':
+	case 'S':
 		{
 			if(klawisz==-1)
 			{
@@ -1163,7 +1218,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'A':
+	case 'A':
 		{
 			if(klawisz==-1)
 			{
@@ -1180,7 +1235,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'Y':
+	case 'Y':
 		{
 			if(klawisz==-1)
 			{
@@ -1197,7 +1252,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'T':
+	case 'T':
 		{
 			if(klawisz==-1)
 			{
@@ -1214,7 +1269,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'R':
+	case 'R':
 		{
 			if(klawisz==-1)
 			{
@@ -1231,7 +1286,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'W':
+	case 'W':
 		{
 			if(klawisz==-1)
 			{
@@ -1248,7 +1303,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case 'Q':
+	case 'Q':
 		{
 			if(klawisz==-1)
 			{
@@ -1265,7 +1320,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '^':
+	case '^':
 		{
 			if(klawisz==-1)
 			{
@@ -1282,7 +1337,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '%':
+	case '%':
 		{
 			if(klawisz==-1)
 			{
@@ -1299,7 +1354,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '$':
+	case '$':
 		{
 			if(klawisz==-1)
 			{
@@ -1316,7 +1371,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '@':
+	case '@':
 		{
 			if(klawisz==-1)
 			{
@@ -1333,7 +1388,7 @@ void keyFunc(unsigned char key, int x, int y)
 			}
 			break;
 		}
-		case '!':
+	case '!':
 		{
 			if(klawisz==-1)
 			{
@@ -1357,313 +1412,313 @@ void keyUpFunc(unsigned char key, int x, int y)
 {
 	switch(key)
 	{
-		case '1': 
+	case '1': 
 		{
 			if(klawisz==-1) klawisz=77;
 			else klawisz_pom=77;
 			break;
 		}
-		case '2': 
+	case '2': 
 		{
 			if(klawisz==-1) klawisz=76;
 			else klawisz_pom=76;
 			break;
 		}
-		case '3': 
+	case '3': 
 		{
 			if(klawisz==-1) klawisz=75;
 			else klawisz_pom=75;
 			break;
 		}
-		case '4': 
+	case '4': 
 		{
 			if(klawisz==-1) klawisz=74;
 			else klawisz_pom=74;
 			break;
 		}
-		case '5': 
+	case '5': 
 		{
 			if(klawisz==-1) klawisz=73;
 			else klawisz_pom=73;
 			break;
 		}
-		case '6': 
+	case '6': 
 		{
 			if(klawisz==-1) klawisz=72;
 			else klawisz_pom=72;
 			break;
 		}
-		case '7': 
+	case '7': 
 		{
 			if(klawisz==-1) klawisz=71;
 			else klawisz_pom=71;
 			break;
 		}
-		case '8': 
+	case '8': 
 		{
 			if(klawisz==-1) klawisz=70;
 			else klawisz_pom=70;
 			break;
 		}
-		case 'q': 
+	case 'q': 
 		{
 			if(klawisz==-1) klawisz=70;
 			else klawisz_pom=70;
 			break;
 		}
-		case 'w': 
+	case 'w': 
 		{
 			if(klawisz==-1) klawisz=69;
 			else klawisz_pom=69;
 			break;
 		}
-		case 'e': 
+	case 'e': 
 		{
 			if(klawisz==-1) klawisz=68;
 			else klawisz_pom=68;
 			break;
 		}
-		case 'r': 
+	case 'r': 
 		{
 			if(klawisz==-1) klawisz=67;
 			else klawisz_pom=67;
 			break;
 		}
-		case 't': 
+	case 't': 
 		{
 			if(klawisz==-1) klawisz=66;
 			else klawisz_pom=66;
 			break;
 		}
-		case 'y': 
+	case 'y': 
 		{
 			if(klawisz==-1) klawisz=65;
 			else klawisz_pom=65;
 			break;
 		}
-		case 'u': 
+	case 'u': 
 		{
 			if(klawisz==-1) klawisz=64;
 			else klawisz_pom=64;
 			break;
 		}
-		case 'i': 
+	case 'i': 
 		{
 			if(klawisz==-1) klawisz=63;
 			else klawisz_pom=63;
 			break;
 		}
-		case 'a': 
+	case 'a': 
 		{
 			if(klawisz==-1) klawisz=63;
 			else klawisz_pom=63;
 			break;
 		}
-		case 's': 
+	case 's': 
 		{
 			if(klawisz==-1) klawisz=62;
 			else klawisz_pom=62;
 			break;
 		}
-		case 'd': 
+	case 'd': 
 		{
 			if(klawisz==-1) klawisz=61;
 			else klawisz_pom=61;
 			break;
 		}
-		case 'f': 
+	case 'f': 
 		{
 			if(klawisz==-1) klawisz=60;
 			else klawisz_pom=60;
 			break;
 		}
-		case 'g': 
+	case 'g': 
 		{
 			if(klawisz==-1) klawisz=59;
 			else klawisz_pom=59;
 			break;
 		}
-		case 'h': 
+	case 'h': 
 		{
 			if(klawisz==-1) klawisz=58;
 			else klawisz_pom=58;
 			break;
 		}
-		case 'j': 
+	case 'j': 
 		{
 			if(klawisz==-1) klawisz=57;
 			else klawisz_pom=57;
 			break;
 		}
-		case 'k': 
+	case 'k': 
 		{
 			if(klawisz==-1) klawisz=56;
 			else klawisz_pom=56;
 			break;
 		}
-		case 'z': 
+	case 'z': 
 		{
 			if(klawisz==-1) klawisz=56;
 			else klawisz_pom=56;
 			break;
 		}
-		case 'x': 
+	case 'x': 
 		{
 			if(klawisz==-1) klawisz=55;
 			else klawisz_pom=55;
 			break;
 		}
-		case 'c': 
+	case 'c': 
 		{
 			if(klawisz==-1) klawisz=54;
 			else klawisz_pom=54;
 			break;
 		}
-		case 'v': 
+	case 'v': 
 		{
 			if(klawisz==-1) klawisz=53;
 			else klawisz_pom=53;
 			break;
 		}
-		case 'b': 
+	case 'b': 
 		{
 			if(klawisz==-1) klawisz=52;
 			else klawisz_pom=52;
 			break;
 		}
-		case 'n': 
+	case 'n': 
 		{
 			if(klawisz==-1) klawisz=51;
 			else klawisz_pom=51;
 			break;
 		}
-		case 'm': 
+	case 'm': 
 		{
 			if(klawisz==-1) klawisz=50;
 			else klawisz_pom=50;
 			break;
 		}
-		case ',': 
+	case ',': 
 		{
 			if(klawisz==-1) klawisz=49;
 			else klawisz_pom=49;
 			break;
 		}
-		case 'N': 
+	case 'N': 
 		{
 			if(klawisz==-1) klawisz=78;
 			else klawisz_pom=78;
 			break;
 		}
-		case 'B': 
+	case 'B': 
 		{
 			if(klawisz==-1) klawisz=79;
 			else klawisz_pom=79;
 			break;
 		}
-		case 'V': 
+	case 'V': 
 		{
 			if(klawisz==-1) klawisz=80;
 			else klawisz_pom=80;
 			break;
 		}
-		case 'X': 
+	case 'X': 
 		{
 			if(klawisz==-1) klawisz=81;
 			else klawisz_pom=81;
 			break;
 		}
-		case 'Z': 
+	case 'Z': 
 		{
 			if(klawisz==-1) klawisz=82;
 			else klawisz_pom=82;
 			break;
 		}
-		case 'H': 
+	case 'H': 
 		{
 			if(klawisz==-1) klawisz=83;
 			else klawisz_pom=83;
 			break;
 		}
-		case 'G': 
+	case 'G': 
 		{
 			if(klawisz==-1) klawisz=84;
 			else klawisz_pom=84;
 			break;
 		}
-		case 'F': 
+	case 'F': 
 		{
 			if(klawisz==-1) klawisz=85;
 			else klawisz_pom=85;
 			break;
 		}
-		case 'S': 
+	case 'S': 
 		{
 			if(klawisz==-1) klawisz=86;
 			else klawisz_pom=86;
 			break;
 		}
-		case 'A': 
+	case 'A': 
 		{
 			if(klawisz==-1) klawisz=87;
 			else klawisz_pom=87;
 			break;
 		}
-		case 'Y': 
+	case 'Y': 
 		{
 			if(klawisz==-1) klawisz=88;
 			else klawisz_pom=88;
 			break;
 		}
-		case 'T': 
+	case 'T': 
 		{
 			if(klawisz==-1) klawisz=89;
 			else klawisz_pom=89;
 			break;
 		}
-		case 'R': 
+	case 'R': 
 		{
 			if(klawisz==-1) klawisz=90;
 			else klawisz_pom=90;
 			break;
 		}
-		case 'W': 
+	case 'W': 
 		{
 			if(klawisz==-1) klawisz=91;
 			else klawisz_pom=91;
 			break;
 		}
-		case 'Q': 
+	case 'Q': 
 		{
 			if(klawisz==-1) klawisz=92;
 			else klawisz_pom=92;
 			break;
 		}
-		case '^': 
+	case '^': 
 		{
 			if(klawisz==-1) klawisz=93;
 			else klawisz_pom=93;
 			break;
 		}
-		case '%': 
+	case '%': 
 		{
 			if(klawisz==-1) klawisz=94;
 			else klawisz_pom=94;
 			break;
 		}
-		case '$': 
+	case '$': 
 		{
 			if(klawisz==-1) klawisz=95;
 			else klawisz_pom=95;
 			break;
 		}
-		case '@': 
+	case '@': 
 		{
 			if(klawisz==-1) klawisz=96;
 			else klawisz_pom=96;
 			break;
 		}
-		case '!': 
+	case '!': 
 		{
 			if(klawisz==-1) klawisz=97;
 			else klawisz_pom=97;
@@ -1708,11 +1763,15 @@ int main(int argc, char* argv[]) {
 	glutKeyboardUpFunc(keyUpFunc);
 	glutDisplayFunc(displayFrame);
 	glutIdleFunc(nextFrame);
+	/*glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_NORMALIZE);*/
 
 	//Tutaj kod inicjujacy	
 	glewInit();
 
 	glEnable(GL_DEPTH_TEST);
+	
 	/*Wczytywanie wszystkich tekstur */
 	wczytaj_teksture(&tapeta, "texture/sciana2.tga"); 
 	wczytaj_teksture(&podloga, "texture/deski.tga"); 
