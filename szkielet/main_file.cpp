@@ -132,7 +132,7 @@ void macierz_pianina() {
 	glLoadMatrixf(value_ptr(V*M));
 }
 
-void macierz_strun() {
+void macierz_strun(float grubosc, float x) {
 	mat4 M;
 	mat4 V=glm::lookAt(
 		vec3(0.0f,0.0f,-5.0f),
@@ -148,8 +148,8 @@ void macierz_strun() {
 
 	M=mat4(1.0f);
 	//M=rotate(M,-30.0f, vec3(0.0f,1.0f,0.0f));
-	M=translate(M, vec3(0.0f,0.0f,-1.0f));
-	M=scale(M,vec3(0.03f, 9.0f, 0.03f));
+	M=translate(M, vec3(x,0.0f,-1.0f));
+	M=scale(M,vec3(grubosc, 9.0f, grubosc));
 	glLoadMatrixf(value_ptr(V*M));
 }
 
@@ -432,10 +432,13 @@ void displayFrame(void) {
 		rysuj_z_tex(&drewno,sufitVertices,sufittexVertices,sufitVertexCount); 
 		rysuj_z_tex(&drewno,scianyVertices,scianytexVertices,scianyVertexCount);
 
-		macierz_strun();
 		glDisable(GL_TEXTURE_2D);
 		glColor3ub(255, 255, 255); 
-		glutSolidCube(1.0); 
+		for(int i=0; i<48; i++)
+		{
+			macierz_strun(0.005+0.0005*i, -4.38+0.185*i);
+			glutSolidCube(1.0); 
+		}
 	}
 	glutSwapBuffers();
 }
