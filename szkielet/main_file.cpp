@@ -153,6 +153,27 @@ void macierz_strun(float grubosc, float x) {
 	glLoadMatrixf(value_ptr(V*M));
 }
 
+void macierz_mloteczkow(float x, float z){
+	mat4 M;
+	mat4 V=glm::lookAt(
+		vec3(0.0f,0.0f,-5.0f),
+		vec3(0.0f,0.0f,0.0f),
+		vec3(0.0f,1.0f,0.0f));
+
+	mat4 P=perspective(130.0f, 1.0f,1.0f, 50.0f);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(value_ptr(P));
+	glMatrixMode(GL_MODELVIEW);
+
+
+	M=mat4(1.0f);
+	M=translate(M, vec3(0.0f, 0.0f, z)); 
+	M=translate(M, vec3(x, 0.0f, 0.0f)); 
+	M=scale(M, vec3(0.07f, 1.0f, 0.07f)); 
+	glLoadMatrixf(value_ptr(V*M));
+}
+
 void macierz_pokrywy(float uchyl) {
 	mat4 M;
 	mat4 V=lookAt(
@@ -397,6 +418,17 @@ void rysuj_lampe(){
 	glColor3ub(255, 255, 255); 
 }
 
+void rysuj_struny()
+{
+		glDisable(GL_TEXTURE_2D);
+		glColor3ub(255, 255, 255); 
+		for(int i=0; i<48; i++)
+		{
+			macierz_strun(0.005+0.0005*i, -4.35+0.187*i);
+			glutSolidCube(1.0); 
+		}
+}
+
 void displayFrame(void) {
 	glClearColor(0,0,0,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -432,11 +464,12 @@ void displayFrame(void) {
 		rysuj_z_tex(&drewno,sufitVertices,sufittexVertices,sufitVertexCount); 
 		rysuj_z_tex(&drewno,scianyVertices,scianytexVertices,scianyVertexCount);
 
-		glDisable(GL_TEXTURE_2D);
-		glColor3ub(255, 255, 255); 
+		rysuj_struny(); 
 		for(int i=0; i<48; i++)
 		{
-			macierz_strun(0.005+0.0005*i, -4.38+0.185*i);
+			glColor3ub(255-4*i, 255-2*i, 255);
+			macierz_mloteczkow(-2.21+0.1*i,-4.0);
+
 			glutSolidCube(1.0); 
 		}
 	}
