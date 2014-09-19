@@ -31,6 +31,7 @@ mat4 lampa;
 
 float obrot_biale[29];
 float obrot_czarne[20];
+float obrot_mloteczki[49]; 
 
 bool podnoszenie=0;
 bool opuszczanie=0;
@@ -153,7 +154,7 @@ void macierz_strun(float grubosc, float x) {
 	glLoadMatrixf(value_ptr(V*M));
 }
 
-void macierz_mloteczkow(float x, float z){
+void macierz_mloteczkow(float x, float z, float obrot){
 	mat4 M;
 	mat4 V=glm::lookAt(
 		vec3(0.0f,0.0f,-5.0f),
@@ -171,6 +172,7 @@ void macierz_mloteczkow(float x, float z){
 	M=translate(M, vec3(0.0f, 0.0f, z)); 
 	M=translate(M, vec3(x, 0.0f, 0.0f)); 
 	M=scale(M, vec3(0.07f, 1.0f, 0.07f)); 
+	M=rotate(M, obrot, vec3(1.0f, 0.0f, 0.0f)); 
 	glLoadMatrixf(value_ptr(V*M));
 }
 
@@ -422,9 +424,9 @@ void rysuj_struny()
 {
 		glDisable(GL_TEXTURE_2D);
 		glColor3ub(255, 255, 255); 
-		for(int i=0; i<48; i++)
+		for(int i=0; i<49; i++)
 		{
-			macierz_strun(0.005+0.0005*i, -4.35+0.187*i);
+			macierz_strun(0.005+0.0005*i, -4.37+0.187*i);
 			glutSolidCube(1.0); 
 		}
 }
@@ -465,10 +467,10 @@ void displayFrame(void) {
 		rysuj_z_tex(&drewno,scianyVertices,scianytexVertices,scianyVertexCount);
 
 		rysuj_struny(); 
-		for(int i=0; i<48; i++)
+		for(int i=0; i<49; i++)
 		{
 			glColor3ub(255-4*i, 255-2*i, 255);
-			macierz_mloteczkow(-2.21+0.1*i,-4.0);
+			macierz_mloteczkow(-2.0+0.0855*i,-4.0, obrot_mloteczki[i]);
 
 			glutSolidCube(1.0); 
 		}
@@ -1825,9 +1827,13 @@ int main(int argc, char* argv[]) {
 		obrot_czarne[i]=6.0; 
 	}
 
-	/*polecam wartości od 6.0 do 1.0 żeby nacisnac bo bez swiatla wyglada to znosnie, pewnie potem bedzie troche lepiej i troche mniej ale to juz latwo dopracowac */
+	for(int i=0; i<49; i++)
+	{
+		obrot_mloteczki[i]=0.0; //Asia przypomina, obrót młoteczka to tak mniej więcej od 0.0 do 30.0 przynajniej tak wybadałam
+	}
+	/* Inne parametry nie ulegają zmianie */ 
 
-
+	
 	glutMainLoop();	
 
 	glDeleteTextures(1,&sufit);
