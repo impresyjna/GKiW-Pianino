@@ -102,6 +102,7 @@
     <ClCompile Include="tga.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Lamp_01.h" />
     <ClInclude Include="obraz.h" />
     <ClInclude Include="stolek.h" />
     <ClInclude Include="klawisze.h" />

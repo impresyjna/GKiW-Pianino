@@ -12,6 +12,7 @@
 #include "okno.h"
 #include "stolek.h"
 #include "obraz.h"
+#include "Lamp_01.h"
 #include <string>
 
 using namespace std; 
@@ -49,6 +50,18 @@ void rysuj_z_tex(GLuint *uchwyt, float *ver, float *vertexture, int vercount) {
 	glVertexPointer( 3, GL_FLOAT, 0, ver);
 	glTexCoordPointer( 2, GL_FLOAT, 0, vertexture);
 	glDrawArrays( GL_QUADS, 0, vercount);
+	glDisableClientState( GL_VERTEX_ARRAY );
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+}
+
+void rysuj_z_tex_trojkaty(GLuint *uchwyt, float *ver, float *vertexture, int vercount) {
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,*uchwyt);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glVertexPointer( 3, GL_FLOAT, 0, ver);
+	glTexCoordPointer( 2, GL_FLOAT, 0, vertexture);
+	glDrawArrays( GL_TRIANGLES, 0, vercount);
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
@@ -246,27 +259,6 @@ void macierz_black(float uchyl, float x){
 	glLoadMatrixf(value_ptr(V*M));
 }
 
-void macierz_podstawka() {
-	mat4 M;
-	mat4 V=lookAt(
-		vec3(0.0f,0.0f,-5.0f),
-		vec3(0.0f,0.0f,0.0f),
-		vec3(0.0f,1.0f,0.0f));
-
-	mat4 P=perspective(100.0f, 1.0f,1.0f, 50.0f);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(value_ptr(P));
-	glMatrixMode(GL_MODELVIEW);
-
-
-	M=tlo;
-	M=translate(M,vec3(0.1f, 0.2f, -0.3f));
-	M=scale(M,vec3(0.07f, 0.07f, 0.07f));
-	lampa=M; 
-	glLoadMatrixf(value_ptr(V*M));
-};
-
 void macierz_draga() {
 	mat4 M;
 	mat4 V=lookAt(
@@ -282,29 +274,10 @@ void macierz_draga() {
 
 
 	M=tlo;
-	M=translate(M,vec3(0.1f, 0.2f, -0.15f));
-	M=rotate(M, 90.f,vec3(1.0f, 0.0f, 0.0f)); 
-	M=scale(M,vec3(0.03f, 0.35f, 0.03f)); 
-	glLoadMatrixf(value_ptr(V*M));
-};
-
-void macierz_abazuru(float z) {
-	mat4 M;
-	mat4 V=lookAt(
-		vec3(0.0f,0.0f,-5.0f),
-		vec3(0.0f,0.0f,0.0f),
-		vec3(0.0f,1.0f,0.0f));
-
-	mat4 P=perspective(100.0f, 1.0f,1.0f, 50.0f);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(value_ptr(P));
-	glMatrixMode(GL_MODELVIEW);
-
-
-	M=tlo;
-	M=translate(M,vec3(0.1f, 0.2f, z));
-	M=scale(M,vec3(0.07f, 0.07f, 0.07f)); 
+	
+	M=translate(M,vec3(0.0f, 0.15f, -0.15f));
+	M=scale(M,vec3(0.25f, 0.25f, 0.4f)); 
+	
 	glLoadMatrixf(value_ptr(V*M));
 };
 
@@ -400,26 +373,6 @@ void rysuj_pianino(){
 	}
 }
 
-void rysuj_lampe(){
-	macierz_podstawka();
-	glColor3ub(148, 139, 139); 
-	glutSolidTorus(0.2, 0.4, 10, 20);
-	macierz_draga();
-	glutSolidTorus(0.2, 0.3, 10, 20); 
-	glColor3ub(58, 44, 148); 
-	macierz_abazuru(0.0f); 
-	glutSolidTorus(0.2, 0.4, 10, 20);
-	macierz_abazuru(0.02f);
-	glutSolidTorus(0.2, 0.35, 10, 20);
-	macierz_abazuru(0.04f);
-	glutSolidTorus(0.2, 0.30, 10, 20);
-	macierz_abazuru(0.06f);
-	glutSolidTorus(0.2, 0.25, 10, 20);
-	macierz_abazuru(0.08f);
-	glutSolidTorus(0.2, 0.2, 10, 20);
-	glColor3ub(255, 255, 255); 
-}
-
 void rysuj_struny()
 {
 		glDisable(GL_TEXTURE_2D);
@@ -446,8 +399,10 @@ void displayFrame(void) {
 		/* Rysowanie pianina z klawiszami */ 
 		rysuj_pianino(); 
 
-		/* Rysowanie lampy oteksturowanej */
-		rysuj_lampe();
+		///* Rysowanie lampy oteksturowanej */
+		//rysuj_lampe();
+		macierz_draga(); 
+		rysuj_z_tex_trojkaty(&sufit, Lamp_01Verts, Lamp_01TexCoords, Lamp_01NumVerts); 
 
 		macierz_stolka();
 		rysuj_z_tex(&drewno, stolekVertices, stolekTexCoord, stolekVertexCount); 
@@ -1801,9 +1756,9 @@ int main(int argc, char* argv[]) {
 	glutKeyboardUpFunc(keyUpFunc);
 	glutDisplayFunc(displayFrame);
 	glutIdleFunc(nextFrame);
-	/*glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glEnable(GL_NORMALIZE);*/
+	glEnable(GL_NORMALIZE);
 
 	//Tutaj kod inicjujacy	
 	glewInit();
