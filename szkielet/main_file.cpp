@@ -274,10 +274,10 @@ void macierz_draga() {
 
 
 	M=tlo;
-	
+
 	M=translate(M,vec3(0.0f, 0.15f, -0.15f));
 	M=scale(M,vec3(0.25f, 0.25f, 0.4f)); 
-	
+
 	glLoadMatrixf(value_ptr(V*M));
 };
 
@@ -375,13 +375,13 @@ void rysuj_pianino(){
 
 void rysuj_struny()
 {
-		glDisable(GL_TEXTURE_2D);
-		glColor3ub(255, 255, 255); 
-		for(int i=0; i<49; i++)
-		{
-			macierz_strun(0.005+0.0005*i, -4.37+0.187*i);
-			glutSolidCube(1.0); 
-		}
+	glDisable(GL_TEXTURE_2D);
+	glColor3ub(255, 255, 255); 
+	for(int i=0; i<49; i++)
+	{
+		macierz_strun(0.005+0.0005*i, -4.37+0.187*i);
+		glutSolidCube(1.0); 
+	}
 }
 
 void displayFrame(void) {
@@ -410,7 +410,7 @@ void displayFrame(void) {
 		macierz_obrazu(); 
 		rysuj_z_tex(&drewno, rama_oVertices, rama_oTexVertices, rama_oVertexCount); 
 		rysuj_z_tex(&obraz, obrazVertices, obrazTexVertices, obrazVertexCount); 
-		float lightPos[]={10, 10, 10, 1.0};
+		float lightPos[]={5, 0, 0, 1.0};
 		glLightfv(GL_LIGHT0,GL_POSITION,lightPos);
 
 	}
@@ -1721,7 +1721,7 @@ void keyUpFunc(unsigned char key, int x, int y)
 }
 //Koniec poligonu klawiatury
 
-void wczytaj_teksture(GLuint *uchwyt, char *plik){
+void wczytaj_teksture(GLuint *uchwyt, char *plik, float amb[], float dif[], float spec[]){
 	if (img.Load(plik)==IMG_OK) {
 		glGenTextures(1,&*uchwyt); //Zainicjuj uchwyt tex
 		glBindTexture(GL_TEXTURE_2D,*uchwyt); //Przetwarzaj uchwyt tex
@@ -1744,6 +1744,10 @@ void wczytaj_teksture(GLuint *uchwyt, char *plik){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glEnable(GL_TEXTURE_2D); 
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, amb);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, dif);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spec);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50);
 };
 
 int main(int argc, char* argv[]) {
@@ -1764,13 +1768,16 @@ int main(int argc, char* argv[]) {
 	glewInit();
 
 	glEnable(GL_DEPTH_TEST);
-	
+
 	/*Wczytywanie wszystkich tekstur */
-	wczytaj_teksture(&tapeta, "texture/sciana2.tga"); 
-	wczytaj_teksture(&podloga, "texture/deski.tga"); 
-	wczytaj_teksture(&sufit, "texture/sufit1.tga"); 
-	wczytaj_teksture(&drewno, "texture/drewno1.tga");
-	wczytaj_teksture(&obraz, "texture/obraz.tga"); 
+	float amb[] = {1,1,1,1};
+	float dif[] = {1,1,1,1};
+	float spec[] = {1,1,1,1};
+	wczytaj_teksture(&tapeta, "texture/sciana2.tga", amb, dif, spec); 
+	wczytaj_teksture(&podloga, "texture/deski.tga", amb, dif, spec); 
+	wczytaj_teksture(&sufit, "texture/sufit1.tga", amb, dif, spec); 
+	wczytaj_teksture(&drewno, "texture/drewno1.tga", amb, dif, spec);
+	wczytaj_teksture(&obraz, "texture/obraz.tga", amb, dif, spec); 
 
 	for(int i=0; i<29; i++)
 	{
@@ -1788,7 +1795,7 @@ int main(int argc, char* argv[]) {
 	}
 	/* Inne parametry nie ulegają zmianie */ 
 
-	
+
 	glutMainLoop();	
 
 	glDeleteTextures(1,&sufit);
