@@ -1763,11 +1763,13 @@ int main(int argc, char* argv[]) {
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_NORMALIZE);
+	glEnable(GL_COLOR_MATERIAL);
 
 	//Tutaj kod inicjujacy	
 	glewInit();
 
 	glEnable(GL_DEPTH_TEST);
+	glShadeModel(GL_SMOOTH);
 
 	/*Wczytywanie wszystkich tekstur */
 	float amb[] = {1,1,1,1};
