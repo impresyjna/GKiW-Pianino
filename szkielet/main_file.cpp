@@ -41,6 +41,8 @@ float uchyl=0.0f;
 int lastTime=0;
 int klawisz=-1;
 int klawisz_pom=-1;
+int mloteczek=0;
+int wcisniety=-1;
 
 void rysuj_z_tex(GLuint *uchwyt, float *ver, float *vertexture, int vercount) {
 	glEnable(GL_TEXTURE_2D);
@@ -430,6 +432,12 @@ void displayFrame(void) {
 			glutSolidCube(1.0); 
 		}
 	}
+
+	if((klawisz==-1)&&(klawisz_pom!=-1))
+	{
+		klawisz=klawisz_pom;
+		klawisz_pom=-1;
+	}
 	glutSwapBuffers();
 }
 
@@ -439,7 +447,6 @@ void nextFrame(void)
 	{
 		int actTime=glutGet(GLUT_ELAPSED_TIME);
 		int interval=actTime-lastTime;
-
 
 		if(interval>50)
 		{
@@ -476,25 +483,107 @@ void nextFrame(void)
 				else if((klawisz>48)&&(klawisz<=77))
 				{
 					if(obrot_biale[klawisz-49]<6.0f) obrot_biale[klawisz-49]=obrot_biale[klawisz-49]+1.0f;
-					else if(obrot_biale[klawisz-49]>=6.0f) klawisz=-1;
+					else if(obrot_biale[klawisz-49]>=6.0f)
+					{
+						if((klawisz-49)==wcisniety) wcisniety=-1;
+						klawisz=-1;
+					}
 				}
 				else if((klawisz>77)&&(klawisz<=97))
 				{
 					if(obrot_czarne[klawisz-78]<6.0f) obrot_czarne[klawisz-78]=obrot_czarne[klawisz-78]+1.0f;
-					else if(obrot_czarne[klawisz-78]>=6.0f) klawisz=-1;
+					else if(obrot_czarne[klawisz-78]>=6.0f)
+					{
+						if((klawisz-49)==wcisniety) wcisniety=-1;
+						klawisz=-1;
+					}
 				}
 			}
 		}
 	}
 	else if(podniesione==1)
 	{
-		//Kod animacji w srodku
+		int actTime=glutGet(GLUT_ELAPSED_TIME);
+		int interval=actTime-lastTime;
+
+		if(interval>50)
+		{
+			lastTime=actTime;
+
+			if(klawisz!=-1)
+			{
+				if(klawisz<=28)
+				{
+					int kpom=klawisz;
+					if(kpom==0) mloteczek=0;
+					else
+					{
+						kpom=kpom-1;
+						int kpom2=kpom/7;
+						kpom=kpom%7;
+						if(kpom<=3) mloteczek=kpom*2+(kpom2*12)+1;
+						else if(kpom==4) mloteczek=7+(kpom2*12)+1;
+						else mloteczek=kpom*2+(kpom2*12);
+					}
+					if(obrot_mloteczki[mloteczek]<30.0f) obrot_mloteczki[mloteczek]=obrot_mloteczki[mloteczek]+3.0f;
+					else if(obrot_mloteczki[mloteczek]>=30.0f) klawisz=-1;
+					cout<<endl<<mloteczek;
+				}
+				else if((klawisz>28)&&(klawisz<=48))
+				{
+					int kpom=klawisz-29;
+					int kpom2=kpom/5;
+					kpom=kpom%5;
+					if(kpom<=2) mloteczek=kpom*2+2+(kpom2*12);
+					else mloteczek=kpom*2+3+(kpom2*12);
+					if(obrot_mloteczki[mloteczek]<30.0f) obrot_mloteczki[mloteczek]=obrot_mloteczki[mloteczek]+3.0f;
+					else if(obrot_mloteczki[mloteczek]>=30.0f) klawisz=-1;
+					cout<<endl<<mloteczek;
+				}
+				else if((klawisz>48)&&(klawisz<=77))
+				{
+					int kpom=klawisz-49;
+					if(kpom==0) mloteczek=0;
+					else
+					{
+						kpom=kpom-1;
+						int kpom2=kpom/7;
+						kpom=kpom%7;
+						if(kpom<=3) mloteczek=kpom*2+(kpom2*12)+1;
+						else if(kpom==4) mloteczek=7+(kpom2*12)+1;
+						else mloteczek=kpom*2+(kpom2*12);
+					}
+					if(obrot_mloteczki[mloteczek]>0.0f) obrot_mloteczki[mloteczek]=obrot_mloteczki[mloteczek]-3.0f;
+					else if(obrot_mloteczki[mloteczek]<=0.0f)
+					{
+						if((klawisz-49)==wcisniety) wcisniety=-1;
+						klawisz=-1;
+					}
+					cout<<endl<<kpom;
+				}
+				else if((klawisz>77)&&(klawisz<=97))
+				{
+					int kpom=klawisz-78;
+					int kpom2=kpom/5;
+					kpom=kpom%5;
+					if(kpom<=2) mloteczek=kpom*2+2+(kpom2*12);
+					else mloteczek=kpom*2+3+(kpom2*12);
+					if(obrot_mloteczki[mloteczek]>0.0f) obrot_mloteczki[mloteczek]=obrot_mloteczki[mloteczek]-3.0f;
+					else if(obrot_mloteczki[mloteczek]<=0.0f)
+					{
+						if((klawisz-49)==wcisniety) wcisniety=-1;
+						klawisz=-1;
+					}
+					cout<<endl<<kpom;
+				}
+			}
+		}
 	}
 
 	glutPostRedisplay();
 }
 
-//Początek poligonu klawiatury:
+//Początek obsługi klawiatury:
 void keyFunc(unsigned char key, int x, int y)
 {
 	switch(key)
@@ -516,11 +605,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '1':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=28;
+					wcisniety=klawisz;
 					PlaySound("sound/01.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -533,11 +623,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '2':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=27;
+					wcisniety=klawisz;
 					PlaySound("sound/02.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -550,11 +641,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '3':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=26;
+					wcisniety=klawisz;
 					PlaySound("sound/03.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -567,11 +659,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '4':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=25;
+					wcisniety=klawisz;
 					PlaySound("sound/04.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -584,11 +677,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '5':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=24;
+					wcisniety=klawisz;
 					PlaySound("sound/05.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -601,11 +695,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '6':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=23;
+					wcisniety=klawisz;
 					PlaySound("sound/06.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -618,11 +713,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '7':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=22;
+					wcisniety=klawisz;
 					PlaySound("sound/07.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -635,11 +731,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '8':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=21;
+					wcisniety=klawisz;
 					PlaySound("sound/11.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -652,11 +749,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'q':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=21;
+					wcisniety=klawisz;
 					PlaySound("sound/11.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -669,11 +767,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'w':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=20;
+					wcisniety=klawisz;
 					PlaySound("sound/12.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -686,11 +785,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'e':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=19;
+					wcisniety=klawisz;
 					PlaySound("sound/13.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -703,11 +803,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'r':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=18;
+					wcisniety=klawisz;
 					PlaySound("sound/14.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -720,11 +821,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 't':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=17;
+					wcisniety=klawisz;
 					PlaySound("sound/15.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -737,11 +839,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'y':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=16;
+					wcisniety=klawisz;
 					PlaySound("sound/16.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -754,11 +857,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'u':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=15;
+					wcisniety=klawisz;
 					PlaySound("sound/17.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -771,11 +875,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'i':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=14;
+					wcisniety=klawisz;
 					PlaySound("sound/21.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -788,11 +893,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'a':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=14;
+					wcisniety=klawisz;
 					PlaySound("sound/21.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -805,11 +911,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 's':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=13;
+					wcisniety=klawisz;
 					PlaySound("sound/22.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -822,11 +929,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'd':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=12;
+					wcisniety=klawisz;
 					PlaySound("sound/23.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -839,11 +947,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'f':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=11;
+					wcisniety=klawisz;
 					PlaySound("sound/24.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -856,11 +965,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'g':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=10;
+					wcisniety=klawisz;
 					PlaySound("sound/25.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -873,11 +983,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'h':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=9;
+					wcisniety=klawisz;
 					PlaySound("sound/26.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -890,11 +1001,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'j':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=8;
+					wcisniety=klawisz;
 					PlaySound("sound/27.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -907,11 +1019,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'k':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=7;
+					wcisniety=klawisz;
 					PlaySound("sound/31.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -924,11 +1037,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'z':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=7;
+					wcisniety=klawisz;
 					PlaySound("sound/31.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -941,11 +1055,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'x':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=6;
+					wcisniety=klawisz;
 					PlaySound("sound/32.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -958,11 +1073,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'c':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=5;
+					wcisniety=klawisz;
 					PlaySound("sound/33.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -975,11 +1091,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'v':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=4;
+					wcisniety=klawisz;
 					PlaySound("sound/34.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -992,11 +1109,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'b':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=3;
+					wcisniety=klawisz;
 					PlaySound("sound/35.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1009,11 +1127,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'n':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=2;
+					wcisniety=klawisz;
 					PlaySound("sound/36.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1026,11 +1145,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'm':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=1;
+					wcisniety=klawisz;
 					PlaySound("sound/37.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1043,11 +1163,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case ',':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=0;
+					wcisniety=klawisz;
 					PlaySound("sound/38.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1060,11 +1181,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'N':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=29;
+					wcisniety=klawisz;
 					PlaySound("sound/60.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1077,11 +1199,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'B':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=30;
+					wcisniety=klawisz;
 					PlaySound("sound/59.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1094,11 +1217,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'V':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=31;
+					wcisniety=klawisz;
 					PlaySound("sound/58.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1111,11 +1235,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'X':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=32;
+					wcisniety=klawisz;
 					PlaySound("sound/57.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1128,11 +1253,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'Z':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=33;
+					wcisniety=klawisz;
 					PlaySound("sound/56.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1145,11 +1271,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'H':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=34;
+					wcisniety=klawisz;
 					PlaySound("sound/55.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1162,11 +1289,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'G':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=35;
+					wcisniety=klawisz;
 					PlaySound("sound/54.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1179,11 +1307,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'F':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=36;
+					wcisniety=klawisz;
 					PlaySound("sound/53.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1196,11 +1325,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'S':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=37;
+					wcisniety=klawisz;
 					PlaySound("sound/52.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1213,11 +1343,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'A':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=38;
+					wcisniety=klawisz;
 					PlaySound("sound/51.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1230,11 +1361,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'Y':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=39;
+					wcisniety=klawisz;
 					PlaySound("sound/50.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1247,11 +1379,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'T':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=40;
+					wcisniety=klawisz;
 					PlaySound("sound/49.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1264,11 +1397,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'R':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=41;
+					wcisniety=klawisz;
 					PlaySound("sound/48.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1281,11 +1415,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'W':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=42;
+					wcisniety=klawisz;
 					PlaySound("sound/47.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1298,11 +1433,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case 'Q':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=43;
+					wcisniety=klawisz;
 					PlaySound("sound/46.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1315,11 +1451,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '^':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=44;
+					wcisniety=klawisz;
 					PlaySound("sound/45.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1332,11 +1469,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '%':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=45;
+					wcisniety=klawisz;
 					PlaySound("sound/44.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1349,11 +1487,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '$':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=46;
+					wcisniety=klawisz;
 					PlaySound("sound/43.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1366,11 +1505,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '@':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=47;
+					wcisniety=klawisz;
 					PlaySound("sound/42.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1383,11 +1523,12 @@ void keyFunc(unsigned char key, int x, int y)
 		}
 	case '!':
 		{
-			if(klawisz==-1)
+			if((klawisz==-1)&&(wcisniety==-1))
 			{
 				if(klawisz_pom==-1)
 				{
 					klawisz=48;
+					wcisniety=klawisz;
 					PlaySound("sound/41.wav", NULL, SND_FILENAME|SND_ASYNC);
 				}
 				else
@@ -1719,7 +1860,7 @@ void keyUpFunc(unsigned char key, int x, int y)
 		}
 	}
 }
-//Koniec poligonu klawiatury
+//Koniec obsługi klawiatury
 
 void wczytaj_teksture(GLuint *uchwyt, char *plik, float amb[], float dif[], float spec[]){
 	if (img.Load(plik)==IMG_OK) {
