@@ -23,6 +23,9 @@ GLuint podloga;
 GLuint sufit;
 GLuint drewno; 
 GLuint obraz; 
+GLuint biale; 
+GLuint czarne; 
+GLuint lampka; 
 
 TGAImg img; 
 
@@ -44,28 +47,34 @@ int klawisz_pom=-1;
 int mloteczek=0;
 int wcisniety=-1;
 
-void rysuj_z_tex(GLuint *uchwyt, float *ver, float *vertexture, int vercount) {
+void rysuj_z_tex(GLuint *uchwyt, float *ver, float *vertexture, float *vernormals, int vercount) {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,*uchwyt);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
 	glVertexPointer( 3, GL_FLOAT, 0, ver);
 	glTexCoordPointer( 2, GL_FLOAT, 0, vertexture);
+	glNormalPointer(GL_FLOAT,0,vernormals);
 	glDrawArrays( GL_QUADS, 0, vercount);
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
 }
 
-void rysuj_z_tex_trojkaty(GLuint *uchwyt, float *ver, float *vertexture, int vercount) {
+void rysuj_z_tex_trojkaty(GLuint *uchwyt, float *ver, float *vertexture, float *vernormals, int vercount) {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,*uchwyt);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
 	glVertexPointer( 3, GL_FLOAT, 0, ver);
 	glTexCoordPointer( 2, GL_FLOAT, 0, vertexture);
+	glNormalPointer(GL_FLOAT,0,vernormals);
 	glDrawArrays( GL_TRIANGLES, 0, vercount);
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
 }
 
 void rysuj_z_kolor(float *ver, float *vercolor, int vercount) {
@@ -329,11 +338,11 @@ void macierz_obrazu(){
 
 void rysuj_pianino(){
 	macierz_pianina();
-	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertexCount);
+	rysuj_z_tex(&drewno,pudloVertices,pudlotexVertices,pudloVertices, pudloVertexCount);
 	macierz_pokrywy(uchyl); //Argument to wartość typu float oznaczająca uchył pokrywy
-	rysuj_z_tex(&drewno,movingpokrywaVertices, movingpokrywaTex, movingpokrywaVertexCount);
+	rysuj_z_tex(&drewno,movingpokrywaVertices, movingpokrywaTex, movingpokrywaVertices, movingpokrywaVertexCount);
 	macierz_klawisza(obrot_biale[0], -1.38); 
-	rysuj_z_kolor(bialy_prostyVertices, bialy_prostyColors, bialy_prostyVerCount);
+	rysuj_z_tex(&biale, bialy_prostyVertices, bialy_prostyTex, bialy_prostyVertices, bialy_prostyVerCount);
 	int ktory=1; 
 	for(int i=0; i<4; i++)
 	{
@@ -344,10 +353,10 @@ void rysuj_pianino(){
 			macierz_klawisza(obrot_biale[ktory], x);
 			ktory++;
 			if(j==0 || j==4) {
-				rysuj_z_kolor(bialy_leftcutVertices, bialy_onesidecutColors, bialy_leftcutVerCount);
+				rysuj_z_tex(&biale, bialy_leftcutVertices, bialy_onesidecutTex, bialy_leftcutVertices, bialy_leftcutVerCount);
 			}
-			if(j==3 || j==6) rysuj_z_kolor(bialy_rightcutVertices, bialy_onesidecutColors, bialy_rightcutVerCount);
-			else rysuj_z_kolor(bialy_twosidecutVertices, bialy_twosidecutColors, bialy_twosidecutVerCount);
+			if(j==3 || j==6) rysuj_z_tex(&biale, bialy_rightcutVertices, bialy_onesidecutTex, bialy_rightcutVertices, bialy_rightcutVerCount);
+			else rysuj_z_tex(&biale, bialy_twosidecutVertices, bialy_twosidecutTex, bialy_twosidecutVertices, bialy_twosidecutVerCount);
 		}
 	}
 
@@ -363,7 +372,7 @@ void rysuj_pianino(){
 			ktory++;
 			if(j!=3 && j!=6)
 			{
-				rysuj_z_kolor(czarnyVertices, czarnyColors, czarnyVerCount);
+				rysuj_z_tex(&czarne, czarnyVertices, czarnyTex, czarnyVertices, czarnyVerCount);
 				kolejny++;
 			}
 		}
@@ -394,34 +403,39 @@ void displayFrame(void) {
 	{
 		/* Rysowanie podlogi,sufitu i scian */
 		macierz_tla(); 
-		rysuj_z_tex(&podloga,podlogaVertices,podlogatexVertices,podlogaVertexCount); 
-		rysuj_z_tex(&sufit,sufitVertices,sufittexVertices,sufitVertexCount); 
-		rysuj_z_tex(&tapeta,scianyVertices,scianytexVertices,scianyVertexCount);
+		rysuj_z_tex(&podloga,podlogaVertices,podlogatexVertices,podlogaVertices, podlogaVertexCount); 
+		rysuj_z_tex(&sufit,sufitVertices,sufittexVertices, sufitVertices, sufitVertexCount); 
+		rysuj_z_tex(&tapeta,scianyVertices,scianytexVertices, scianyVertices, scianyVertexCount);
 
 		/* Rysowanie pianina z klawiszami */ 
 		rysuj_pianino(); 
 
 		///* Rysowanie lampy oteksturowanej */
-		//rysuj_lampe();
 		macierz_draga(); 
-		rysuj_z_tex_trojkaty(&sufit, Lamp_01Verts, Lamp_01TexCoords, Lamp_01NumVerts); 
+		rysuj_z_tex_trojkaty(&lampka, Lamp_01Verts, Lamp_01TexCoords, Lamp_01Normals, Lamp_01NumVerts); 
 
 		macierz_stolka();
-		rysuj_z_tex(&drewno, stolekVertices, stolekTexCoord, stolekVertexCount); 
+		rysuj_z_tex(&drewno, stolekVertices, stolekTexCoord, stolekVertices, stolekVertexCount); 
 
 		macierz_obrazu(); 
-		rysuj_z_tex(&drewno, rama_oVertices, rama_oTexVertices, rama_oVertexCount); 
-		rysuj_z_tex(&obraz, obrazVertices, obrazTexVertices, obrazVertexCount); 
-		float lightPos[]={5, 0, 0, 1.0};
-		glLightfv(GL_LIGHT0,GL_POSITION,lightPos);
+		rysuj_z_tex(&drewno, rama_oVertices, rama_oTexVertices, rama_oVertices, rama_oVertexCount); 
+		rysuj_z_tex(&obraz, obrazVertices, obrazTexVertices, obrazVertices, obrazVertexCount); 
+		float lightPos0[]={-2,0.7,-3,1};
+		float lightDir0[]={-1,0,1,0}; 
+		glLightfv(GL_LIGHT0,GL_POSITION,lightPos0);
+		glLightfv(GL_LIGHT0,GL_SPOT_DIRECTION,lightDir0);
 
+		float lightPos1[]={-5,0,4,0};
+		float lightDir1[]={-2,0,-3,0};
+		glLightfv(GL_LIGHT1,GL_POSITION,lightPos1);
+		glLightfv(GL_LIGHT1,GL_SPOT_DIRECTION,lightDir1);
 	}
 	else if(podniesione==1)
 	{
 		macierz_tla2(); 
-		rysuj_z_tex(&drewno,podlogaVertices,podlogatexVertices,podlogaVertexCount); 
-		rysuj_z_tex(&drewno,sufitVertices,sufittexVertices,sufitVertexCount); 
-		rysuj_z_tex(&drewno,scianyVertices,scianytexVertices,scianyVertexCount);
+		rysuj_z_tex(&drewno,podlogaVertices,podlogatexVertices, podlogaVertices, podlogaVertexCount); 
+		rysuj_z_tex(&drewno,sufitVertices,sufittexVertices,sufitVertices, sufitVertexCount); 
+		rysuj_z_tex(&drewno,scianyVertices,scianytexVertices,scianyVertices,scianyVertexCount);
 
 		rysuj_struny(); 
 		for(int i=0; i<49; i++)
@@ -431,6 +445,16 @@ void displayFrame(void) {
 
 			glutSolidCube(1.0); 
 		}
+		float lightPos0[]={-2,0.7,-3,1};
+		float lightDir0[]={-1,0,1,0}; 
+		glLightfv(GL_LIGHT0,GL_POSITION,lightPos0);
+		glLightfv(GL_LIGHT0,GL_SPOT_DIRECTION,lightDir0);
+
+		float lightPos1[]={-5,0,4,0};
+		float lightDir1[]={-2,0,-3,0};
+		glLightfv(GL_LIGHT1,GL_POSITION,lightPos1);
+		glLightfv(GL_LIGHT1,GL_SPOT_DIRECTION,lightDir1);
+		glColor3ub(255, 255, 255);
 	}
 
 	if((klawisz==-1)&&(klawisz_pom!=-1))
@@ -1862,7 +1886,7 @@ void keyUpFunc(unsigned char key, int x, int y)
 }
 //Koniec obsługi klawiatury
 
-void wczytaj_teksture(GLuint *uchwyt, char *plik, float amb[], float dif[], float spec[]){
+void wczytaj_teksture(GLuint *uchwyt, char *plik, float amb[], float dif[], float spec[], float shin){
 	if (img.Load(plik)==IMG_OK) {
 		glGenTextures(1,&*uchwyt); //Zainicjuj uchwyt tex
 		glBindTexture(GL_TEXTURE_2D,*uchwyt); //Przetwarzaj uchwyt tex
@@ -1888,7 +1912,7 @@ void wczytaj_teksture(GLuint *uchwyt, char *plik, float amb[], float dif[], floa
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, amb);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, dif);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spec);
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shin);
 };
 
 int main(int argc, char* argv[]) {
@@ -1903,8 +1927,18 @@ int main(int argc, char* argv[]) {
 	glutIdleFunc(nextFrame);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_COLOR_MATERIAL);
+
+	float amb[] = {0.05,0.05,0.05,1};
+	float dif[] = {0.8,0.8,0.8,1};
+	float spec[] = {0.05,0.05,0.05,1};
+
+	glLightfv(GL_LIGHT1,GL_AMBIENT, amb);
+	glLightfv(GL_LIGHT1,GL_DIFFUSE, dif);
+	glLightfv(GL_LIGHT1,GL_SPECULAR, spec);
+	glLightfv(GL_LIGHT1, GL_EMISSION, dif); 
 
 	//Tutaj kod inicjujacy	
 	glewInit();
@@ -1913,14 +1947,16 @@ int main(int argc, char* argv[]) {
 	glShadeModel(GL_SMOOTH);
 
 	/*Wczytywanie wszystkich tekstur */
-	float amb[] = {1,1,1,1};
-	float dif[] = {1,1,1,1};
-	float spec[] = {1,1,1,1};
-	wczytaj_teksture(&tapeta, "texture/sciana2.tga", amb, dif, spec); 
-	wczytaj_teksture(&podloga, "texture/deski.tga", amb, dif, spec); 
-	wczytaj_teksture(&sufit, "texture/sufit1.tga", amb, dif, spec); 
-	wczytaj_teksture(&drewno, "texture/drewno1.tga", amb, dif, spec);
-	wczytaj_teksture(&obraz, "texture/obraz.tga", amb, dif, spec); 
+	
+
+	wczytaj_teksture(&tapeta, "texture/sciana2.tga", tapeta_amb, tapeta_dif, tapeta_spec, 50); 
+	wczytaj_teksture(&podloga, "texture/deski.tga", podloga_amb, podloga_dif, podloga_spec, 50); 
+	wczytaj_teksture(&sufit, "texture/sufit1.tga", sufit_amb, sufit_dif, sufit_spec, 50); 
+	wczytaj_teksture(&drewno, "texture/drewno1.tga", drewno_amb, drewno_dif, drewno_spec, 20);
+	wczytaj_teksture(&obraz, "texture/obraz.tga", obraz_amb, obraz_dif, obraz_spec, 60); 
+	wczytaj_teksture(&biale, "texture/biale.tga", biale_amb, biale_dif, biale_spec, 11.264); 
+	wczytaj_teksture(&czarne, "texture/czarne.tga", czarne_amb, czarne_dif, czarne_spec, 32); 
+	wczytaj_teksture(&lampka, "texture/lampka.tga", sufit_amb, sufit_dif, sufit_spec, 50); 
 
 	for(int i=0; i<29; i++)
 	{

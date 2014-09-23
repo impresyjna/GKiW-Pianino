@@ -172,4 +172,8 @@ float obrazTexVertices[]={
   0,0,	0,1,	1,1,	1,0
 };
 
+float obraz_amb[] = {0.0215,0.1745,0.0215,1};
+float obraz_dif[] = {0.07568,0.07568,0.07568,1};
+float obraz_spec[] = {0.633,0.727811,0.633,1};
+
 #endif
