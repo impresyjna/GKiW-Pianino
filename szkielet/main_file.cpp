@@ -47,6 +47,8 @@ int klawisz_pom=-1;
 int mloteczek=0;
 int wcisniety=-1;
 
+bool fullscreen=TRUE;
+
 void rysuj_z_tex(GLuint *uchwyt, float *ver, float *vertexture, float *vernormals, int vercount) {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,*uchwyt);
@@ -551,7 +553,6 @@ void nextFrame(void)
 					}
 					if(obrot_mloteczki[mloteczek]<30.0f) obrot_mloteczki[mloteczek]=obrot_mloteczki[mloteczek]+3.0f;
 					else if(obrot_mloteczki[mloteczek]>=30.0f) klawisz=-1;
-					cout<<endl<<mloteczek;
 				}
 				else if((klawisz>28)&&(klawisz<=48))
 				{
@@ -562,7 +563,6 @@ void nextFrame(void)
 					else mloteczek=kpom*2+3+(kpom2*12);
 					if(obrot_mloteczki[mloteczek]<30.0f) obrot_mloteczki[mloteczek]=obrot_mloteczki[mloteczek]+3.0f;
 					else if(obrot_mloteczki[mloteczek]>=30.0f) klawisz=-1;
-					cout<<endl<<mloteczek;
 				}
 				else if((klawisz>48)&&(klawisz<=77))
 				{
@@ -583,7 +583,6 @@ void nextFrame(void)
 						if((klawisz-49)==wcisniety) wcisniety=-1;
 						klawisz=-1;
 					}
-					cout<<endl<<kpom;
 				}
 				else if((klawisz>77)&&(klawisz<=97))
 				{
@@ -598,7 +597,6 @@ void nextFrame(void)
 						if((klawisz-49)==wcisniety) wcisniety=-1;
 						klawisz=-1;
 					}
-					cout<<endl<<kpom;
 				}
 			}
 		}
@@ -1573,313 +1571,313 @@ void keyUpFunc(unsigned char key, int x, int y)
 	case '1': 
 		{
 			if(klawisz==-1) klawisz=77;
-			else klawisz_pom=77;
+			else if(klawisz_pom==-1) klawisz_pom=77;
 			break;
 		}
 	case '2': 
 		{
 			if(klawisz==-1) klawisz=76;
-			else klawisz_pom=76;
+			else if(klawisz_pom==-1) klawisz_pom=76;
 			break;
 		}
 	case '3': 
 		{
 			if(klawisz==-1) klawisz=75;
-			else klawisz_pom=75;
+			else if(klawisz_pom==-1) klawisz_pom=75;
 			break;
 		}
 	case '4': 
 		{
 			if(klawisz==-1) klawisz=74;
-			else klawisz_pom=74;
+			else if(klawisz_pom==-1) klawisz_pom=74;
 			break;
 		}
 	case '5': 
 		{
 			if(klawisz==-1) klawisz=73;
-			else klawisz_pom=73;
+			else if(klawisz_pom==-1) klawisz_pom=73;
 			break;
 		}
 	case '6': 
 		{
 			if(klawisz==-1) klawisz=72;
-			else klawisz_pom=72;
+			else if(klawisz_pom==-1) klawisz_pom=72;
 			break;
 		}
 	case '7': 
 		{
 			if(klawisz==-1) klawisz=71;
-			else klawisz_pom=71;
+			else if(klawisz_pom==-1) klawisz_pom=71;
 			break;
 		}
 	case '8': 
 		{
 			if(klawisz==-1) klawisz=70;
-			else klawisz_pom=70;
+			else if(klawisz_pom==-1) klawisz_pom=70;
 			break;
 		}
 	case 'q': 
 		{
 			if(klawisz==-1) klawisz=70;
-			else klawisz_pom=70;
+			else if(klawisz_pom==-1) klawisz_pom=70;
 			break;
 		}
 	case 'w': 
 		{
 			if(klawisz==-1) klawisz=69;
-			else klawisz_pom=69;
+			else if(klawisz_pom==-1) klawisz_pom=69;
 			break;
 		}
 	case 'e': 
 		{
 			if(klawisz==-1) klawisz=68;
-			else klawisz_pom=68;
+			else if(klawisz_pom==-1) klawisz_pom=68;
 			break;
 		}
 	case 'r': 
 		{
 			if(klawisz==-1) klawisz=67;
-			else klawisz_pom=67;
+			else if(klawisz_pom==-1) klawisz_pom=67;
 			break;
 		}
 	case 't': 
 		{
 			if(klawisz==-1) klawisz=66;
-			else klawisz_pom=66;
+			else if(klawisz_pom==-1) klawisz_pom=66;
 			break;
 		}
 	case 'y': 
 		{
 			if(klawisz==-1) klawisz=65;
-			else klawisz_pom=65;
+			else if(klawisz_pom==-1) klawisz_pom=65;
 			break;
 		}
 	case 'u': 
 		{
 			if(klawisz==-1) klawisz=64;
-			else klawisz_pom=64;
+			else if(klawisz_pom==-1) klawisz_pom=64;
 			break;
 		}
 	case 'i': 
 		{
 			if(klawisz==-1) klawisz=63;
-			else klawisz_pom=63;
+			else if(klawisz_pom==-1) klawisz_pom=63;
 			break;
 		}
 	case 'a': 
 		{
 			if(klawisz==-1) klawisz=63;
-			else klawisz_pom=63;
+			else if(klawisz_pom==-1) klawisz_pom=63;
 			break;
 		}
 	case 's': 
 		{
 			if(klawisz==-1) klawisz=62;
-			else klawisz_pom=62;
+			else if(klawisz_pom==-1) klawisz_pom=62;
 			break;
 		}
 	case 'd': 
 		{
 			if(klawisz==-1) klawisz=61;
-			else klawisz_pom=61;
+			else if(klawisz_pom==-1) klawisz_pom=61;
 			break;
 		}
 	case 'f': 
 		{
 			if(klawisz==-1) klawisz=60;
-			else klawisz_pom=60;
+			else if(klawisz_pom==-1) klawisz_pom=60;
 			break;
 		}
 	case 'g': 
 		{
 			if(klawisz==-1) klawisz=59;
-			else klawisz_pom=59;
+			else if(klawisz_pom==-1) klawisz_pom=59;
 			break;
 		}
 	case 'h': 
 		{
 			if(klawisz==-1) klawisz=58;
-			else klawisz_pom=58;
+			else if(klawisz_pom==-1) klawisz_pom=58;
 			break;
 		}
 	case 'j': 
 		{
 			if(klawisz==-1) klawisz=57;
-			else klawisz_pom=57;
+			else if(klawisz_pom==-1) klawisz_pom=57;
 			break;
 		}
 	case 'k': 
 		{
 			if(klawisz==-1) klawisz=56;
-			else klawisz_pom=56;
+			else if(klawisz_pom==-1) klawisz_pom=56;
 			break;
 		}
 	case 'z': 
 		{
 			if(klawisz==-1) klawisz=56;
-			else klawisz_pom=56;
+			else if(klawisz_pom==-1) klawisz_pom=56;
 			break;
 		}
 	case 'x': 
 		{
 			if(klawisz==-1) klawisz=55;
-			else klawisz_pom=55;
+			else if(klawisz_pom==-1) klawisz_pom=55;
 			break;
 		}
 	case 'c': 
 		{
 			if(klawisz==-1) klawisz=54;
-			else klawisz_pom=54;
+			else if(klawisz_pom==-1) klawisz_pom=54;
 			break;
 		}
 	case 'v': 
 		{
 			if(klawisz==-1) klawisz=53;
-			else klawisz_pom=53;
+			else if(klawisz_pom==-1) klawisz_pom=53;
 			break;
 		}
 	case 'b': 
 		{
 			if(klawisz==-1) klawisz=52;
-			else klawisz_pom=52;
+			else if(klawisz_pom==-1) klawisz_pom=52;
 			break;
 		}
 	case 'n': 
 		{
 			if(klawisz==-1) klawisz=51;
-			else klawisz_pom=51;
+			else if(klawisz_pom==-1) klawisz_pom=51;
 			break;
 		}
 	case 'm': 
 		{
 			if(klawisz==-1) klawisz=50;
-			else klawisz_pom=50;
+			else if(klawisz_pom==-1) klawisz_pom=50;
 			break;
 		}
 	case ',': 
 		{
 			if(klawisz==-1) klawisz=49;
-			else klawisz_pom=49;
+			else if(klawisz_pom==-1) klawisz_pom=49;
 			break;
 		}
 	case 'N': 
 		{
 			if(klawisz==-1) klawisz=78;
-			else klawisz_pom=78;
+			else if(klawisz_pom==-1) klawisz_pom=78;
 			break;
 		}
 	case 'B': 
 		{
 			if(klawisz==-1) klawisz=79;
-			else klawisz_pom=79;
+			else if(klawisz_pom==-1) klawisz_pom=79;
 			break;
 		}
 	case 'V': 
 		{
 			if(klawisz==-1) klawisz=80;
-			else klawisz_pom=80;
+			else if(klawisz_pom==-1) klawisz_pom=80;
 			break;
 		}
 	case 'X': 
 		{
 			if(klawisz==-1) klawisz=81;
-			else klawisz_pom=81;
+			else if(klawisz_pom==-1) klawisz_pom=81;
 			break;
 		}
 	case 'Z': 
 		{
 			if(klawisz==-1) klawisz=82;
-			else klawisz_pom=82;
+			else if(klawisz_pom==-1) klawisz_pom=82;
 			break;
 		}
 	case 'H': 
 		{
 			if(klawisz==-1) klawisz=83;
-			else klawisz_pom=83;
+			else if(klawisz_pom==-1) klawisz_pom=83;
 			break;
 		}
 	case 'G': 
 		{
 			if(klawisz==-1) klawisz=84;
-			else klawisz_pom=84;
+			else if(klawisz_pom==-1) klawisz_pom=84;
 			break;
 		}
 	case 'F': 
 		{
 			if(klawisz==-1) klawisz=85;
-			else klawisz_pom=85;
+			else if(klawisz_pom==-1) klawisz_pom=85;
 			break;
 		}
 	case 'S': 
 		{
 			if(klawisz==-1) klawisz=86;
-			else klawisz_pom=86;
+			else if(klawisz_pom==-1) klawisz_pom=86;
 			break;
 		}
 	case 'A': 
 		{
 			if(klawisz==-1) klawisz=87;
-			else klawisz_pom=87;
+			else if(klawisz_pom==-1) klawisz_pom=87;
 			break;
 		}
 	case 'Y': 
 		{
 			if(klawisz==-1) klawisz=88;
-			else klawisz_pom=88;
+			else if(klawisz_pom==-1) klawisz_pom=88;
 			break;
 		}
 	case 'T': 
 		{
 			if(klawisz==-1) klawisz=89;
-			else klawisz_pom=89;
+			else if(klawisz_pom==-1) klawisz_pom=89;
 			break;
 		}
 	case 'R': 
 		{
 			if(klawisz==-1) klawisz=90;
-			else klawisz_pom=90;
+			else if(klawisz_pom==-1) klawisz_pom=90;
 			break;
 		}
 	case 'W': 
 		{
 			if(klawisz==-1) klawisz=91;
-			else klawisz_pom=91;
+			else if(klawisz_pom==-1) klawisz_pom=91;
 			break;
 		}
 	case 'Q': 
 		{
 			if(klawisz==-1) klawisz=92;
-			else klawisz_pom=92;
+			else if(klawisz_pom==-1) klawisz_pom=92;
 			break;
 		}
 	case '^': 
 		{
 			if(klawisz==-1) klawisz=93;
-			else klawisz_pom=93;
+			else if(klawisz_pom==-1) klawisz_pom=93;
 			break;
 		}
 	case '%': 
 		{
 			if(klawisz==-1) klawisz=94;
-			else klawisz_pom=94;
+			else if(klawisz_pom==-1) klawisz_pom=94;
 			break;
 		}
 	case '$': 
 		{
 			if(klawisz==-1) klawisz=95;
-			else klawisz_pom=95;
+			else if(klawisz_pom==-1) klawisz_pom=95;
 			break;
 		}
 	case '@': 
 		{
 			if(klawisz==-1) klawisz=96;
-			else klawisz_pom=96;
+			else if(klawisz_pom==-1) klawisz_pom=96;
 			break;
 		}
 	case '!': 
 		{
 			if(klawisz==-1) klawisz=97;
-			else klawisz_pom=97;
+			else if(klawisz_pom==-1) klawisz_pom=97;
 			break;
 		}
 	}
